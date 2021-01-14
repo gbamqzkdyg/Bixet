@@ -12,6 +12,7 @@ namespace Bixet
 
     public class DataFetcher
     {
+        public const string Verion = "0.0.1";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly byte[] bytes;
