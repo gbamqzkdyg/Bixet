@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bixet", "Bixet\Bixet.csproj", "{BEC4DFB1-96F4-47F2-855F-4399DC7B40A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BixetTest", "BixetTest\BixetTest.csproj", "{170E703A-4665-498A-AEB8-E396A1E95EBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEC4DFB1-96F4-47F2-855F-4399DC7B40A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC4DFB1-96F4-47F2-855F-4399DC7B40A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC4DFB1-96F4-47F2-855F-4399DC7B40A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC4DFB1-96F4-47F2-855F-4399DC7B40A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{170E703A-4665-498A-AEB8-E396A1E95EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{170E703A-4665-498A-AEB8-E396A1E95EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{170E703A-4665-498A-AEB8-E396A1E95EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{170E703A-4665-498A-AEB8-E396A1E95EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AFF7FF3E-C82E-4801-9D53-61BB7AF73773}
+	EndGlobalSection
+EndGlobal
