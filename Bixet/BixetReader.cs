@@ -4,15 +4,9 @@ using System.Text;
 
 namespace Bixet
 {
-    public enum Endian
-    {
-        BigEndian,
-        SmallEndian
-    }
-
     public class BixetReader
     {
-        public const string Verion = "0.0.2";
+        public const string Verion = "0.0.3";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly byte[] bytes;
@@ -42,12 +36,12 @@ namespace Bixet
 
         public byte this[int i]
         {
-            get { return this.GetSingleByte(i); }
+            get => this.GetSingleByte(i);
         }
 
-        public static byte operator %(BixetReader df, int i)
+        public byte this[int i, int j]
         {
-            return df.GetSingleBit(i);
+            get => this.GetSingleBit(i * 8 + j);
         }
 
         private void ReverseByteEndian(byte[] bytes)
@@ -78,16 +72,16 @@ namespace Bixet
             }
         }
 
-        private byte GetSingleByte(int beginIndex)
+        private byte GetSingleByte(int index)
         {
-            if (beginIndex >= this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
-            return this.bytes[beginIndex];
+            if (index < 0 || index >= this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
+            return this.bytes[index];
         }
 
-        private byte GetSingleBit(int beginIndex)
+        private byte GetSingleBit(int index)
         {
-            if (beginIndex >= this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
-            return (byte)(this.bits[beginIndex] ? 1 : 0);
+            if (index < 0 || index >= this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
+            return (byte)(this.bits[index] ? 1 : 0);
         }
 
         public byte[] GetRawBytes(uint beginIndex, uint length)
@@ -154,8 +148,8 @@ namespace Bixet
                 for (int i = 0; i < length; ++i)
                 {
                     res *= 2;
-                    if (!reverseBits) res += this % (beginIndex++);
-                    else res += this % (beginIndex--);
+                    if (!reverseBits) res += this[0, beginIndex++];
+                    else res += this[0, beginIndex--];
                 }
             }
             else throw new NotSupportedException("不支持转换为目标类型");

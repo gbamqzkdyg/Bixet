@@ -37,20 +37,20 @@ namespace BixetTest
         public void TestGetSingleBit()
         {
             BixetReader br = new BixetReader(new byte[] { 0x20, 0x22, 0x33, 0x44 });
-            0.Should().Be(br % 3);
-            1.Should().Be(br % 2);
-            1.Should().Be(br % 29);
-            br.Invoking(_ => _ % 32).Should().Throw<IndexOutOfRangeException>().WithMessage("给定的参数异常");
+            0.Should().Be(br[0, 3]);
+            1.Should().Be(br[0, 2]);
+            1.Should().Be(br[3, 5]);
+            br.Invoking(_ => _[0, 32]).Should().Throw<IndexOutOfRangeException>().WithMessage("给定的参数异常");
         }
 
         [TestMethod]
         public void TestEndians()
         {
             byte[] bytes = new byte[] { 1, 0, 0, 0 };
-            1.Should().Be(new BixetReader(bytes, Endian.BigEndian, Endian.SmallEndian) % 7);
-            1.Should().Be(new BixetReader(bytes, Endian.SmallEndian, Endian.SmallEndian) % 31);
-            1.Should().Be(new BixetReader(bytes, Endian.BigEndian, Endian.BigEndian) % 0);
-            1.Should().Be(new BixetReader(bytes, Endian.SmallEndian, Endian.BigEndian) % 24);
+            1.Should().Be(new BixetReader(bytes, Endian.BigEndian, Endian.SmallEndian)[0, 7]);
+            1.Should().Be(new BixetReader(bytes, Endian.SmallEndian, Endian.SmallEndian)[0, 31]);
+            1.Should().Be(new BixetReader(bytes, Endian.BigEndian, Endian.BigEndian)[0, 0]);
+            1.Should().Be(new BixetReader(bytes, Endian.SmallEndian, Endian.BigEndian)[0, 24]);
         }
 
         [TestMethod]
