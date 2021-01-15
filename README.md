@@ -1,4 +1,4 @@
 # Bixet
 ## Content
-1. DataFetcher
+1. BitexReader
 2. To be continued

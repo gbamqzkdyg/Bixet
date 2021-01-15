@@ -10,7 +10,7 @@ namespace Bixet
         SmallEndian
     }
 
-    public class DataFetcher
+    public class BixetReader
     {
         public const string Verion = "0.0.1";
         public const int maxBytesSize = 8;
@@ -20,7 +20,7 @@ namespace Bixet
         public int BytesCount { get { return this.bytes.Length; } }
         public int BitsCount { get { return this.bits.Count; } }
 
-        public DataFetcher(byte[] bytes, int offset, int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
+        public BixetReader(byte[] bytes, int offset, int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
         {
             if (bytes == null || offset < 0 || byteLength <= 0 || offset + byteLength > bytes.Length) throw new IndexOutOfRangeException("给定的参数异常");
             this.bytes = new byte[byteLength];
@@ -36,16 +36,16 @@ namespace Bixet
             }
         }
 
-        public DataFetcher(byte[] bytes, int length, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, length, byteEndian, bitEndian) { }
+        public BixetReader(byte[] bytes, int length, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, length, byteEndian, bitEndian) { }
 
-        public DataFetcher(byte[] bytes, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, bytes.Length, byteEndian, bitEndian) { }
+        public BixetReader(byte[] bytes, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, bytes.Length, byteEndian, bitEndian) { }
 
         public byte this[int i]
         {
             get { return this.GetSingleByte(i); }
         }
 
-        public static byte operator %(DataFetcher df, int i)
+        public static byte operator %(BixetReader df, int i)
         {
             return df.GetSingleBit(i);
         }
@@ -111,7 +111,7 @@ namespace Bixet
             return this.GetRawBits(byteIndex * 8 + bitIndex, length);
         }
 
-        public T GetValueByByteIndex<T>(int beginIndex, int length, bool reverseBytes = false)
+        public T ReadValueByByteIndex<T>(int beginIndex, int length, bool reverseBytes = false)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
             uint maxLength = this.ByteLengthOfType(typeof(T));
@@ -131,7 +131,7 @@ namespace Bixet
             return (T)Convert.ChangeType(res, typeof(T));
         }
 
-        public string GetStringByByteIndex(int beginIndex, int length, bool reverseBytes = false, Encoding encoding = null)
+        public string ReadStringByByteIndex(int beginIndex, int length, bool reverseBytes = false, Encoding encoding = null)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
             if (encoding == null) encoding = Encoding.Default;
@@ -142,7 +142,7 @@ namespace Bixet
             return encoding.GetString(tmp);
         }
 
-        public T GetValueByBitIndex<T>(int beginIndex, int length, bool reverseBits = false)
+        public T ReadValueByBitIndex<T>(int beginIndex, int length, bool reverseBits = false)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
             uint maxLength = this.BitLengthOfType(typeof(T));
@@ -162,9 +162,9 @@ namespace Bixet
             return (T)Convert.ChangeType(res, typeof(T));
         }
 
-        public T GetValueByBitIndex<T>(int byteIndex, int bitIndex, int length, bool reverseBits = false)
+        public T ReadValueByBitIndex<T>(int byteIndex, int bitIndex, int length, bool reverseBits = false)
         {
-            return this.GetValueByBitIndex<T>(8 * byteIndex + bitIndex, length, reverseBits);
+            return this.ReadValueByBitIndex<T>(8 * byteIndex + bitIndex, length, reverseBits);
         }
 
         private uint BitLengthOfType(Type T)
