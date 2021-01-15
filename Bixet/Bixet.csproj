@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BixetReader.cs" />
+    <Compile Include="BixetUtil.cs" />
     <Compile Include="BixetWriter.cs" />
     <Compile Include="Endian.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

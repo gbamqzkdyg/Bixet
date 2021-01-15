@@ -28,10 +28,15 @@ namespace Bixet
 
         public byte this[int i]
         {
-            set => this.SetSingleByte(value, i);
+            set => this.SetSingleByte(i, value);
         }
 
-        private void SetSingleByte(byte b, int index)
+        public byte this[int i, int j]
+        {
+            set => this.SetSingleBit(i * 8 + j, value);
+        }
+
+        private void SetSingleByte(int index, byte b)
         {
             if(index >= this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
             BitArray tmp = new BitArray(b);
@@ -42,10 +47,22 @@ namespace Bixet
             }
         }
 
-        public void SetSingleBit(byte b, int index)
+        private void SetSingleBit(int index, byte b)
         {
             if (index >= this.BitsCount || b > 1) throw new IndexOutOfRangeException("给定的参数异常");
             this.bits[index] = b != 0;
+        }
+
+        public byte[] GetWholeData()
+        {
+            byte[] res = new byte[this.BytesCount];
+            BitArray bits = new BitArray(this.bits);
+            if(this.bitEndian == Endian.SmallEndian)
+            {
+                BixetUtil.ReverseBitEndian(bits);
+            }
+            bits.CopyTo(res, 0);
+            return res;
         }
     }
 }
