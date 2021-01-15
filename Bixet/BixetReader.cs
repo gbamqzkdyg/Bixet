@@ -12,7 +12,7 @@ namespace Bixet
 
     public class BixetReader
     {
-        public const string Verion = "0.0.1";
+        public const string Verion = "0.0.2";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly byte[] bytes;
@@ -27,12 +27,12 @@ namespace Bixet
             Array.Copy(bytes, offset, this.bytes, 0, byteLength);
             if (byteEndian == Endian.SmallEndian)
             {
-                this.ReverseBytes();
+                this.ReverseByteEndian(this.bytes);
             }
             this.bits = new BitArray(this.bytes);
             if (bitEndian == Endian.SmallEndian)
             {
-                this.ReverseBits();
+                this.ReverseBitEndian(this.bits);
             }
         }
 
@@ -50,7 +50,7 @@ namespace Bixet
             return df.GetSingleBit(i);
         }
 
-        private void ReverseBytes()
+        private void ReverseByteEndian(byte[] bytes)
         {
             int begin = 0;
             int end = bytes.Length - 1;
@@ -63,7 +63,7 @@ namespace Bixet
             }
         }
 
-        private void ReverseBits()
+        private void ReverseBitEndian(BitArray bits)
         {
             bool tmp;
             for(int i = 0; i < BitsCount; i += 8)
@@ -165,6 +165,34 @@ namespace Bixet
         public T ReadValueByBitIndex<T>(int byteIndex, int bitIndex, int length, bool reverseBits = false)
         {
             return this.ReadValueByBitIndex<T>(8 * byteIndex + bitIndex, length, reverseBits);
+        }
+
+        public string ReadStringByBitIndex(int beginIndex, int length, bool reverseBits = false, Encoding encoding = null)
+        {
+            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (length % 8 != 0) throw new FormatException("待转换比特不为整字节");
+            if (encoding == null) encoding = Encoding.Default;
+            BitArray rawBits = this.GetRawBits(beginIndex, length);
+            byte[] buf = new byte[length / 8];
+            if (!reverseBits)
+            {
+                int lo = 0;
+                int hi = length - 1;
+                while(lo < hi)
+                {
+                    bool tmp = rawBits[lo];
+                    rawBits[lo++] = rawBits[hi];
+                    rawBits[hi--] = tmp;
+                }
+            }
+            rawBits.CopyTo(buf, 0);
+            this.ReverseByteEndian(buf);
+            return encoding.GetString(buf);
+        }
+
+        public string ReadStringByBitIndex(int byteIndex, int bitIndex, int length, bool reverseBits = false, Encoding encoding = null)
+        {
+            return this.ReadStringByBitIndex(byteIndex * 8 + bitIndex, length, reverseBits, encoding);
         }
 
         private uint BitLengthOfType(Type T)

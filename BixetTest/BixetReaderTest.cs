@@ -109,5 +109,24 @@ namespace BixetTest
             br.Invoking(_ => _.ReadValueByBitIndex<string>(0, 4)).Should().Throw<NotSupportedException>();
             br.Invoking(_ => _.ReadValueByBitIndex<Foo>(0, 4)).Should().Throw<NotSupportedException>();
         }
+
+        [TestMethod]
+        public void TestReadStringByBitIndex()
+        {
+            BixetReader br = new BixetReader(Encoding.Default.GetBytes("Hello world!"));
+            br.ReadStringByBitIndex(0, 96).Should().Be("Hello world!");
+            br.ReadStringByBitIndex(48, 48).Should().Be("world!");
+            br.Invoking(_ => _.ReadStringByBitIndex(0, 42)).Should().Throw<FormatException>();
+            br = new BixetReader(Encoding.Default.GetBytes("Hello world!"));
+            byte[] bixetBytes = new byte[] { 0b01100010, 0b01101001, 0b01111000, 0b01100101, 0b01110100 };
+            br = new BixetReader(bixetBytes);
+            br.ReadStringByBitIndex(0, 40).Should().Be("bixet");
+            byte[] bixetReverseBytes = new byte[] { 0b00101110, 0b10100110, 0b00011110, 0b10010110, 0b01000110 };
+            br = new BixetReader(bixetReverseBytes);
+            br.ReadStringByBitIndex(0, 40, true).Should().Be("bixet");
+            byte[] bixetComplexBytes = new byte[] { 0, 0b11000100, 0b11010010, 0b11110000, 0b11001010, 0b11101001 };
+            br = new BixetReader(bixetComplexBytes);
+            br.ReadStringByBitIndex(7, 40).Should().Be("bixet");
+        }
     }
 }
