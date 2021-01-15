@@ -76,7 +76,7 @@ namespace Bixet
         public T ReadValueByByteIndex<T>(int beginIndex, int length)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            uint maxLength = this.ByteLengthOfType(typeof(T));
+            uint maxLength = BixetUtil.ByteLengthOfType(typeof(T));
             long res = 0;
             if (maxLength > 0)
             {
@@ -95,19 +95,18 @@ namespace Bixet
 
         public string ReadStringByByteIndex(int beginIndex, int length, Encoding encoding = null)
         {
-            if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            if (encoding == null) encoding = Encoding.Default;
-            if(this.byteEndian == Endian.BigEndian) return encoding.GetString(this.bytes, beginIndex, length);
+            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
+            if(this.byteEndian == Endian.BigEndian) return (encoding ?? Encoding.Default).GetString(this.bytes, beginIndex, length);
             byte[] tmp = new byte[length];
             beginIndex += length - 1;
             for(int i = 0; i < length; ++i) tmp[i] = this[beginIndex--];
-            return encoding.GetString(tmp);
+            return (encoding ?? Encoding.Default).GetString(tmp);
         }
 
         public T ReadValueByBitIndex<T>(int beginIndex, int length)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            uint maxLength = this.BitLengthOfType(typeof(T));
+            uint maxLength = BixetUtil.BitLengthOfType(typeof(T));
             long res = 0;
             if (maxLength > 0)
             {
@@ -136,7 +135,6 @@ namespace Bixet
         {
             if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (length % 8 != 0) throw new FormatException("待转换比特不为整字节");
-            if (encoding == null) encoding = Encoding.Default;
             BitArray rawBits = this.GetRawBits(beginIndex, length);
             byte[] buf = new byte[length / 8];
             if (this.bitEndian == Endian.BigEndian)
@@ -148,7 +146,7 @@ namespace Bixet
             {
                 BixetUtil.ReverseByteEndian(buf);
             }
-            return encoding.GetString(buf);
+            return (encoding ?? Encoding.Default).GetString(buf);
         }
 
         public string ReadStringByBitIndex(int byteIndex, int bitIndex, int length, Encoding encoding = null)
@@ -156,23 +154,6 @@ namespace Bixet
             return this.ReadStringByBitIndex(byteIndex * 8 + bitIndex, length, encoding);
         }
 
-        private uint BitLengthOfType(Type T)
-        {
-            if (T == typeof(bool)) return 1;
-            else if(T == typeof(sbyte)) return 8;
-            else if(T == typeof(byte)) return 8;
-            else if(T == typeof(int)) return 16;
-            else if(T == typeof(uint)) return 16;
-            else if(T == typeof(short)) return 32;
-            else if(T == typeof(ushort)) return 32;
-            else if(T == typeof(long)) return 64;
-            else if(T == typeof(ulong)) return 64;
-            return 0;
-        }
-
-        private uint ByteLengthOfType(Type T)
-        {
-            return this.BitLengthOfType(T) / 8;
-        }
+        
     }
 }
