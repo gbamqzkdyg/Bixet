@@ -6,11 +6,11 @@ namespace Bixet
 {
     public class BixetReader
     {
-        public const string Verion = "0.0.4";
+        public const string Verion = "0.1.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
-        private Endian byteEndian;
-        private Endian bitEndian;
+        private readonly Endian byteEndian;
+        private readonly Endian bitEndian;
         private readonly byte[] bytes;
         private readonly BitArray bits;
         public int BytesCount { get { return this.bytes.Length; } }
@@ -18,13 +18,12 @@ namespace Bixet
 
         public BixetReader(byte[] bytes, int offset, int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
         {
-            if (bytes == null || offset < 0 || byteLength <= 0 || offset + byteLength > bytes.Length) throw new IndexOutOfRangeException("给定的参数异常");
+            if (bytes == null || offset < 0 || byteLength <= 0 || offset + byteLength > bytes.Length) throw new ArgumentOutOfRangeException("给定的参数异常");
             this.byteEndian = byteEndian;
             this.bitEndian = bitEndian;
             this.bytes = new byte[byteLength];
             Array.Copy(bytes, offset, this.bytes, 0, byteLength);
             this.bits = new BitArray(this.bytes);
-            BixetUtil.ReverseBitEndian(this.bits);
         }
 
         public BixetReader(byte[] bytes, int length, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, length, byteEndian, bitEndian) { }
@@ -43,19 +42,19 @@ namespace Bixet
 
         private byte GetSingleByte(int index)
         {
-            if (index < 0 || index >= this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (index < 0 || index >= this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             return this.bytes[index];
         }
 
         private byte GetSingleBit(int index)
         {
-            if (index < 0 || index >= this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (index < 0 || index >= this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             return (byte)(this.bits[index] ? 1 : 0);
         }
 
         public byte[] GetRawBytes(uint beginIndex, uint length)
         {
-            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             byte[] res = new byte[length];
             Array.Copy(this.bytes, beginIndex, res, 0, length);
             return res;
@@ -63,7 +62,7 @@ namespace Bixet
 
         public BitArray GetRawBits(int beginIndex, int length)
         {
-            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             BitArray res = new BitArray(length);
             for (int i = 0; i < length; ++i) res[i] = bits[beginIndex++];
             return res;
@@ -76,12 +75,12 @@ namespace Bixet
 
         public T ReadValueByByteIndex<T>(int beginIndex, int length)
         {
-            if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             uint maxLength = this.ByteLengthOfType(typeof(T));
             long res = 0;
             if (maxLength > 0)
             {
-                if (length > maxLength) throw new IndexOutOfRangeException("目标类型可容纳字节数小于待转换字节数");
+                if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳字节数小于待转换字节数");
                 if (this.byteEndian == Endian.SmallEndian) beginIndex += length - 1;
                 for (int i = 0; i < length; ++i)
                 {
@@ -96,7 +95,7 @@ namespace Bixet
 
         public string ReadStringByByteIndex(int beginIndex, int length, Encoding encoding = null)
         {
-            if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (encoding == null) encoding = Encoding.Default;
             if(this.byteEndian == Endian.BigEndian) return encoding.GetString(this.bytes, beginIndex, length);
             byte[] tmp = new byte[length];
@@ -107,18 +106,21 @@ namespace Bixet
 
         public T ReadValueByBitIndex<T>(int beginIndex, int length)
         {
-            if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             uint maxLength = this.BitLengthOfType(typeof(T));
             long res = 0;
             if (maxLength > 0)
             {
-                if (length > maxLength) throw new IndexOutOfRangeException("目标类型可容纳比特数小于待转换比特数");
-                if (this.bitEndian == Endian.BigEndian) beginIndex += length - 1;
+                if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳比特数小于待转换比特数");
+                BitArray bits = this.GetRawBits(beginIndex, length);
+                if (this.bitEndian == Endian.BigEndian)
+                {
+                    BixetUtil.ReverseBits(bits);
+                }
                 for (int i = 0; i < length; ++i)
                 {
                     res *= 2;
-                    if (this.bitEndian == Endian.BigEndian) res += this[0, beginIndex--];
-                    else res += this[0, beginIndex++];
+                    res += bits[i] ? 1 : 0;
                 }
             }
             else throw new NotSupportedException("不支持转换为目标类型");
@@ -132,17 +134,20 @@ namespace Bixet
 
         public string ReadStringByBitIndex(int beginIndex, int length, Encoding encoding = null)
         {
-            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new IndexOutOfRangeException("给定的参数异常");
+            if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (length % 8 != 0) throw new FormatException("待转换比特不为整字节");
             if (encoding == null) encoding = Encoding.Default;
             BitArray rawBits = this.GetRawBits(beginIndex, length);
             byte[] buf = new byte[length / 8];
-            if (this.bitEndian == Endian.SmallEndian)
+            if (this.bitEndian == Endian.BigEndian)
             {
-                BixetUtil.ReverseBitEndian(rawBits);
+                BixetUtil.ReverseBits(rawBits);
             }
             rawBits.CopyTo(buf, 0);
-            if(this.byteEndian == Endian.SmallEndian)BixetUtil.ReverseByteEndian(buf);
+            if (this.byteEndian == Endian.SmallEndian)
+            {
+                BixetUtil.ReverseByteEndian(buf);
+            }
             return encoding.GetString(buf);
         }
 
