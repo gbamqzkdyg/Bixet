@@ -6,7 +6,7 @@ namespace Bixet
 {
     public class BixetReader
     {
-        public const string Verion = "0.1.0";
+        public const string Verion = "0.2.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly Endian byteEndian;
@@ -112,7 +112,7 @@ namespace Bixet
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳比特数小于待转换比特数");
                 BitArray bits = this.GetRawBits(beginIndex, length);
-                if (this.bitEndian == Endian.BigEndian)
+                if (this.bitEndian == Endian.SmallEndian)
                 {
                     BixetUtil.ReverseBits(bits);
                 }

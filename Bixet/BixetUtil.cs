@@ -51,10 +51,10 @@ namespace Bixet
             if (T == typeof(bool)) return 1;
             else if (T == typeof(sbyte)) return 8;
             else if (T == typeof(byte)) return 8;
-            else if (T == typeof(int)) return 16;
-            else if (T == typeof(uint)) return 16;
-            else if (T == typeof(short)) return 32;
-            else if (T == typeof(ushort)) return 32;
+            else if (T == typeof(short)) return 16;
+            else if (T == typeof(ushort)) return 16;
+            else if (T == typeof(int)) return 32;
+            else if (T == typeof(uint)) return 32;
             else if (T == typeof(long)) return 64;
             else if (T == typeof(ulong)) return 64;
             return 0;

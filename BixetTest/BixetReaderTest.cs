@@ -68,7 +68,7 @@ namespace BixetTest
             BixetReader br = new BixetReader(new byte[] { 0x12, 0x34, 0x56, 0x78 });
             br.ReadValueByByteIndex<long>(0, 4).Should().Be(0x12345678);
             br.ReadValueByByteIndex<long>(1, 3).Should().Be(0x345678);
-            br.Invoking(_ => _.ReadValueByByteIndex<int>(0, 4)).Should().Throw<ArgumentOutOfRangeException>();
+            br.Invoking(_ => _.ReadValueByByteIndex<short>(0, 4)).Should().Throw<ArgumentOutOfRangeException>();
             br.Invoking(_ => _.ReadValueByByteIndex<string>(0, 4)).Should().Throw<NotSupportedException>();
             br.Invoking(_ => _.ReadValueByByteIndex<bool>(0, 4)).Should().Throw<NotSupportedException>();
             br.Invoking(_ => _.ReadValueByByteIndex<Foo>(0, 4)).Should().Throw<NotSupportedException>();
@@ -90,17 +90,17 @@ namespace BixetTest
         public void TestReadValueByBitIndex()
         {
             BixetReader br = new BixetReader(new byte[] { 0x12, 0x34 }, Endian.SmallEndian);
-            br.ReadValueByBitIndex<int>(0, 16).Should().Be(0x482C);
-            br.ReadValueByBitIndex<long>(4, 8).Should().Be(0x82);
+            br.ReadValueByBitIndex<int>(0, 16).Should().Be(0x3412);
+            br.ReadValueByBitIndex<long>(4, 8).Should().Be(0x41);
             br.ReadValueByBitIndex<bool>(13, 1).Should().Be(true);
-            br.ReadValueByBitIndex<byte>(9, 5).Should().Be(0x0b);
-            br.ReadValueByBitIndex<byte>(1, 1, 5).Should().Be(0x0b);
+            br.ReadValueByBitIndex<byte>(9, 5).Should().Be(0x1A);
+            br.ReadValueByBitIndex<byte>(1, 1, 5).Should().Be(0x1A);
             br.Invoking(_ => _.ReadValueByBitIndex<byte>(0, 9)).Should().Throw<ArgumentOutOfRangeException>();
             br.Invoking(_ => _.ReadValueByBitIndex<string>(0, 4)).Should().Throw<NotSupportedException>();
             br.Invoking(_ => _.ReadValueByBitIndex<Foo>(0, 4)).Should().Throw<NotSupportedException>();
             br = new BixetReader(new byte[] { 0x12, 0x34 }, Endian.BigEndian, Endian.BigEndian);
-            br.ReadValueByBitIndex<int>(0, 16).Should().Be(0x3412);
-            br.ReadValueByBitIndex<byte>(9, 6).Should().Be(0x1A);
+            br.ReadValueByBitIndex<int>(0, 16).Should().Be(0x482C);
+            br.ReadValueByBitIndex<byte>(9, 6).Should().Be(0x16);
         }
 
         private byte ReverseByte(byte b)
@@ -125,7 +125,6 @@ namespace BixetTest
             byte[] bixetBytes = Encoding.Default.GetBytes("bixet");
             br = new BixetReader(bixetBytes);
             br.ReadStringByBitIndex(0, 40).Should().Be("bixet");
-            string valid = Show(br.GetRawBits(0, 40));
             byte[] bixetReverseBytes = new byte[] { this.ReverseByte((byte)'t'), this.ReverseByte((byte)'e'), this.ReverseByte((byte)'x'), this.ReverseByte((byte)'i'), this.ReverseByte((byte)'b'), };
             br = new BixetReader(bixetReverseBytes, Endian.SmallEndian, Endian.BigEndian);
             br.ReadStringByBitIndex(0, 40).Should().Be("texib");
@@ -134,11 +133,16 @@ namespace BixetTest
             br.ReadStringByBitIndex(7, 40).Should().Be("bixet");
         }
 
-        public static string Show(BitArray bits)
+        [TestMethod]
+        public void TestFunction()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (bool b in bits) sb.Append(b ? 1 : 0);
-            return sb.ToString();
+            byte[] message = new byte[] { 0x01, 0x12, 0x34, 0x56, 0x78, 0b10101010, 0b11100100, (byte)'S', (byte)'u', (byte)'c', (byte)'c', (byte)'e', (byte)'s', (byte)'s', };
+            BixetReader br = new BixetReader(message);
+            br.ReadValueByByteIndex<byte>(0, 1).Should().Be(0x01);
+            br.ReadValueByByteIndex<int>(1, 4).Should().Be(0x12345678);
+            for (int i = 0; i < 8; ++i) br.ReadValueByBitIndex<bool>(5, i, 1).Should().Be(i % 2 == 1);
+            for (byte i = 0; i < 4; ++i) br.ReadValueByBitIndex<byte>(6, 2 * i, 2).Should().Be(i);
+            br.ReadStringByByteIndex(7, 7).Should().Be("Success");
         }
     }
 }
