@@ -118,5 +118,18 @@ namespace BixetTest
             bw.WriteStringByBitIndex(16, "bixet", 40);
             Encoding.Default.GetString(bw.GetData(), 2, 5).Should().Be("bixet");
         }
+
+        [TestMethod]
+        public void TestFunction()
+        {
+            byte[] message = new byte[] { 0x01, 0x12, 0x34, 0x56, 0x78, 0b10101010, 0b11100100, (byte)'S', (byte)'u', (byte)'c', (byte)'c', (byte)'e', (byte)'s', (byte)'s', };
+            BixetWriter bw = new BixetWriter(message.Length);
+            bw.WriteValueByByteIndex<byte>(0, 0x01);
+            bw.WriteValueByByteIndex<int>(1, 0x12345678);
+            for (int i = 0; i < 8; ++i) bw.WriteValueByBitIndex<bool>(5, i, i % 2 == 1, 1);
+            for (byte i = 0; i < 4; ++i) bw.WriteValueByBitIndex<byte>(6, 2 * i, i, 2);
+            bw.WriteStringByByteIndex(7, "Success", 7);
+            bw.GetData().Should().BeEquivalentTo(message);
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace Bixet
 {
     public class BixetReader
     {
-        public const string Verion = "0.2.0";
+        public const string Verion = "0.2.1";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly Endian byteEndian;
@@ -84,7 +84,7 @@ namespace Bixet
                 if (this.byteEndian == Endian.SmallEndian) beginIndex += length - 1;
                 for (int i = 0; i < length; ++i)
                 {
-                    res *= 256;
+                    res <<= 8;
                     if (this.byteEndian == Endian.SmallEndian) res += this[beginIndex--];
                     else res += this[beginIndex++];
                 }
@@ -118,7 +118,7 @@ namespace Bixet
                 }
                 for (int i = 0; i < length; ++i)
                 {
-                    res *= 2;
+                    res <<= 1;
                     res += bits[i] ? 1 : 0;
                 }
             }

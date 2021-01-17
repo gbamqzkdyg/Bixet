@@ -108,9 +108,9 @@ namespace BixetTest
             byte res = 0;
             for (int i = 0; i < 8; ++i)
             {
-                res *= 2;
+                res <<= 1;
                 res += (byte)(b % 2);
-                b /= 2;
+                b >>= 1;
             }
             return res;
         }

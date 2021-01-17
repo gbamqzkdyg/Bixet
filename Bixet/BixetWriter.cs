@@ -6,7 +6,7 @@ namespace Bixet
 {
     public class BixetWriter
     {
-        public const string Verion = "0.0.1";
+        public const string Verion = "0.1.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly BitArray bits;
@@ -100,11 +100,16 @@ namespace Bixet
                     {
                         this[beginIndex++] = b;
                     }
-                    l /= 256;
+                    l >>= 8;
                 }
                 
             }
             else throw new NotSupportedException("不支持转换为目标类型");
+        }
+
+        public void WriteValueByByteIndex<T>(int beginIndex, T value)
+        {
+            this.WriteValueByByteIndex<T>(beginIndex, value, (int)BixetUtil.ByteLengthOfType(typeof(T)));
         }
 
         public void WriteValueByBitIndex<T>(int beginIndex, T value, int length)
@@ -130,7 +135,7 @@ namespace Bixet
                     {
                         this.bits[beginIndex++] = b;
                     }
-                    l /= 2;
+                    l >>= 1;
                 }
 
             }
@@ -139,9 +144,9 @@ namespace Bixet
 
         public void WriteValueByBitIndex<T>(int byteIndex, int bitIndex, T value, int length)
         {
-            this.WriteValueByByteIndex<T>(byteIndex * 8 + bitIndex, value, length);
+            this.WriteValueByBitIndex<T>(byteIndex * 8 + bitIndex, value, length);
         }
-        
+
         public void WriteStringByByteIndex(int beginIndex, string s, int length, Encoding encoding = null)
         {
             if (beginIndex < 0 || s == null || length <= 0 || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
@@ -152,7 +157,7 @@ namespace Bixet
             {
                 beginIndex += length - 1;
                 for (int i = 0; i < length; ++i) this[beginIndex--] = bytes[i];
-            }            
+            }   
         }
 
         public void WriteStringByBitIndex(int beginIndex, string s, int length, Encoding encoding = null)
