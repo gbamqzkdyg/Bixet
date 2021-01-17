@@ -41,11 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BixetReader.cs" />
+    <Compile Include="BReader.cs" />
     <Compile Include="BixetUtil.cs" />
-    <Compile Include="BixetWriter.cs" />
+    <Compile Include="BWriter.cs" />
     <Compile Include="Endian.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BixetResolver\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

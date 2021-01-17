@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Bixet
 {
-    public class BixetReader
+    public class BReader
     {
-        public const string Verion = "0.2.1";
+        public const string Verion = "0.3.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly Endian byteEndian;
@@ -16,7 +16,7 @@ namespace Bixet
         public int BytesCount { get { return this.bytes.Length; } }
         public int BitsCount { get { return this.bits.Count; } }
 
-        public BixetReader(byte[] bytes, int offset, int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
+        public BReader(byte[] bytes, int offset, int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
         {
             if (bytes == null || offset < 0 || byteLength <= 0 || offset + byteLength > bytes.Length) throw new ArgumentOutOfRangeException("给定的参数异常");
             this.byteEndian = byteEndian;
@@ -26,9 +26,9 @@ namespace Bixet
             this.bits = new BitArray(this.bytes);
         }
 
-        public BixetReader(byte[] bytes, int length, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, length, byteEndian, bitEndian) { }
+        public BReader(byte[] bytes, int length, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, length, byteEndian, bitEndian) { }
 
-        public BixetReader(byte[] bytes, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, bytes.Length, byteEndian, bitEndian) { }
+        public BReader(byte[] bytes, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, bytes.Length, byteEndian, bitEndian) { }
 
         public byte this[int i]
         {

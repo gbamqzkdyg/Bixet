@@ -8,19 +8,19 @@ using System.Text;
 namespace BixetTest
 {
     [TestClass]
-    public class BixetWriterTest
+    public class BWriterTest
     {
         [TestMethod]
         public void TestCreate()
         {
-            BixetWriter bw = new BixetWriter(5);
+            BWriter bw = new BWriter(5);
             bw.BitsCount.Should().Be(40);
         }
 
         [TestMethod]
         public void TestSetSingleByte()
         {
-            BixetWriter bw = new BixetWriter(6);
+            BWriter bw = new BWriter(6);
             bw[1] = 1;
             bw[3] = 2;
             bw[5] = 3;
@@ -33,7 +33,7 @@ namespace BixetTest
         [TestMethod]
         public void TestSetSingleBit()
         {
-            BixetWriter bw = new BixetWriter(6);
+            BWriter bw = new BWriter(6);
             bw[2, 4] = 1;
             bw.GetData()[2].Should().Be(16);
             bw.Invoking(_ => _[1, 1] = 100).Should().Throw<ArgumentOutOfRangeException>();
@@ -42,7 +42,7 @@ namespace BixetTest
         [TestMethod]
         public void TestSetRawBytes()
         {
-            BixetWriter bw = new BixetWriter(8);
+            BWriter bw = new BWriter(8);
             bw.SetRawBytes(1, new byte[] { 0, 0, 1, 2, 3 }, 2, 3);
             byte[] res = bw.GetData();
             for (byte i = 1; i <= 3; ++i) res[i].Should().Be(i);
@@ -55,7 +55,7 @@ namespace BixetTest
         [TestMethod]
         public void TestSetRawBits()
         {
-            BixetWriter bw = new BixetWriter(8);
+            BWriter bw = new BWriter(8);
             BitArray ba = new BitArray(7);
             for (int i = 0; i < 7; ++i) ba[i] = true;
             bw.SetRawBits(4, ba, 0, 7);
@@ -68,14 +68,14 @@ namespace BixetTest
         [TestMethod]
         public void TestWriteValueByByteIndex()
         {
-            BixetWriter bw = new BixetWriter(5);
+            BWriter bw = new BWriter(5);
             bw.WriteValueByByteIndex<ulong>(1, 0xAABBCCDD12345678, 4);
             byte[] res = bw.GetData();
             res[1].Should().Be(0x12);
             res[2].Should().Be(0x34);
             res[3].Should().Be(0x56);
             res[4].Should().Be(0x78);
-            bw = new BixetWriter(5, Endian.SmallEndian);
+            bw = new BWriter(5, Endian.SmallEndian);
             bw.WriteValueByByteIndex<ulong>(1, 0xAABBCCDD12345678, 4);
             res = bw.GetData();
             res[1].Should().Be(0x78);
@@ -83,14 +83,14 @@ namespace BixetTest
             res[3].Should().Be(0x34);
             res[4].Should().Be(0x12);
             bw.Invoking(_ => _.WriteValueByByteIndex<bool>(0, false, 1)).Should().Throw<NotSupportedException>();
-            bw.Invoking(_ => _.WriteValueByByteIndex<BixetWriter>(0, _, 1)).Should().Throw<NotSupportedException>();
+            bw.Invoking(_ => _.WriteValueByByteIndex<BWriter>(0, _, 1)).Should().Throw<NotSupportedException>();
             bw.Invoking(_ => _.WriteValueByByteIndex<int>(0, 0, 5)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [TestMethod]
         public void TestWriteValueByBitIndex()
         {
-            BixetWriter bw = new BixetWriter(8);
+            BWriter bw = new BWriter(8);
             bw.WriteValueByBitIndex<bool>(42, true, 1);
             byte[] res = bw.GetData();
             res[5].Should().Be(4);
@@ -103,10 +103,10 @@ namespace BixetTest
         [TestMethod]
         public void TestWriteStringByByteIndex()
         {
-            BixetWriter bw = new BixetWriter(10);
+            BWriter bw = new BWriter(10);
             bw.WriteStringByByteIndex(2, "bixet", 5);
             Encoding.Default.GetString(bw.GetData(), 2, 5).Should().Be("bixet");
-            bw = new BixetWriter(10, Endian.SmallEndian);
+            bw = new BWriter(10, Endian.SmallEndian);
             bw.WriteStringByByteIndex(2, "texib", 5);
             Encoding.Default.GetString(bw.GetData(), 2, 5).Should().Be("bixet");
         }
@@ -114,7 +114,7 @@ namespace BixetTest
         [TestMethod]
         public void TestWriteStringByBitIndex()
         {
-            BixetWriter bw = new BixetWriter(10);
+            BWriter bw = new BWriter(10);
             bw.WriteStringByBitIndex(16, "bixet", 40);
             Encoding.Default.GetString(bw.GetData(), 2, 5).Should().Be("bixet");
         }
@@ -123,7 +123,7 @@ namespace BixetTest
         public void TestFunction()
         {
             byte[] message = new byte[] { 0x01, 0x12, 0x34, 0x56, 0x78, 0b10101010, 0b11100100, (byte)'S', (byte)'u', (byte)'c', (byte)'c', (byte)'e', (byte)'s', (byte)'s', };
-            BixetWriter bw = new BixetWriter(message.Length);
+            BWriter bw = new BWriter(message.Length);
             bw.WriteValueByByteIndex<byte>(0, 0x01);
             bw.WriteValueByByteIndex<int>(1, 0x12345678);
             for (int i = 0; i < 8; ++i) bw.WriteValueByBitIndex<bool>(5, i, i % 2 == 1, 1);

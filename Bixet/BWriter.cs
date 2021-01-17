@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Bixet
 {
-    public class BixetWriter
+    public class BWriter
     {
-        public const string Verion = "0.1.0";
+        public const string Verion = "0.2.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly BitArray bits;
@@ -15,7 +15,7 @@ namespace Bixet
         public int BytesCount { get { return this.bits.Count / 8; } }
         public int BitsCount { get { return this.bits.Count; } }
 
-        public BixetWriter(int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
+        public BWriter(int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
         {
             if (byteLength <= 0) throw new ArgumentOutOfRangeException("给定的参数异常");
             this.bits = new BitArray(byteLength * 8);
