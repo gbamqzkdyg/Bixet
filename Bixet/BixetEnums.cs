@@ -11,4 +11,16 @@ namespace Bixet
         BigEndian,
         SmallEndian
     }
+
+    public enum LengthUnit
+    {
+        Byte,
+        Bit
+    }
+
+    public enum BitexValueType
+    {
+        Number, 
+        String
+    }
 }
