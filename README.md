@@ -44,7 +44,7 @@
 ### 数据内存布局
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bixet中默认的数据的字节排布顺序与字节内部的比特排布顺序如下图所示：
 
-![内存布局](http://182.92.225.2:55555/MemoryLayout.png "内存布局")
+![内存布局](Items/MemoryLayout.png "内存布局")
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;即对于下述代码所描述的数据：
 ```C#
