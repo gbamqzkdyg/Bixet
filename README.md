@@ -41,7 +41,9 @@
 ### 数据内存布局
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bixet中默认的数据的字节排布顺序与字节内部的比特排布顺序如下图所示：
 
-![内存布局]("https://dss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white-d0c9fe2af5.png" "内存布局")
+![内存布局]("/Items/MemoryLayout.png" "内存布局")
+###### [<p align="right">返回目录</p>](#本文内容)
+***
 
 ## BReader类
 <div style="font-size:70%">命名空间：Bixet</div>
