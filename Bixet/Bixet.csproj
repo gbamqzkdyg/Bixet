@@ -48,7 +48,7 @@
     <Compile Include="BResolver\BTemplete.cs" />
     <Compile Include="BResolver\BVariable.cs" />
     <Compile Include="BReader.cs" />
-    <Compile Include="BixetUtil.cs" />
+    <Compile Include="BUtil.cs" />
     <Compile Include="BWriter.cs" />
     <Compile Include="BixetEnums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

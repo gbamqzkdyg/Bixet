@@ -80,7 +80,7 @@ namespace Bixet
         public void WriteValueByByteIndex<T>(int beginIndex, T value, int length)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            uint maxLength = BixetUtil.ByteLengthOfType(typeof(T));
+            uint maxLength = BUtil.ByteLengthOfType(typeof(T));
             if (maxLength > 0)
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳字节数小于待转换字节数");
@@ -109,13 +109,13 @@ namespace Bixet
 
         public void WriteValueByByteIndex<T>(int beginIndex, T value)
         {
-            this.WriteValueByByteIndex<T>(beginIndex, value, (int)BixetUtil.ByteLengthOfType(typeof(T)));
+            this.WriteValueByByteIndex<T>(beginIndex, value, (int)BUtil.ByteLengthOfType(typeof(T)));
         }
 
         public void WriteValueByBitIndex<T>(int beginIndex, T value, int length)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            uint maxLength = BixetUtil.BitLengthOfType(typeof(T));
+            uint maxLength = BUtil.BitLengthOfType(typeof(T));
             if (maxLength > 0)
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳比特数小于待转换比特数");

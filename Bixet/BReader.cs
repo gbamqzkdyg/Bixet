@@ -76,7 +76,7 @@ namespace Bixet
         public T ReadValueByByteIndex<T>(int beginIndex, int length)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            uint maxLength = BixetUtil.ByteLengthOfType(typeof(T));
+            uint maxLength = BUtil.ByteLengthOfType(typeof(T));
             long res = 0;
             if (maxLength > 0)
             {
@@ -106,7 +106,7 @@ namespace Bixet
         public T ReadValueByBitIndex<T>(int beginIndex, int length)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            uint maxLength = BixetUtil.BitLengthOfType(typeof(T));
+            uint maxLength = BUtil.BitLengthOfType(typeof(T));
             long res = 0;
             if (maxLength > 0)
             {
@@ -114,7 +114,7 @@ namespace Bixet
                 BitArray bits = this.GetRawBits(beginIndex, length);
                 if (this.bitEndian == Endian.SmallEndian)
                 {
-                    BixetUtil.ReverseBitsOrder(bits);
+                    BUtil.ReverseBitsOrder(bits);
                 }
                 for (int i = 0; i < length; ++i)
                 {
@@ -139,12 +139,12 @@ namespace Bixet
             byte[] buf = new byte[length / 8];
             if (this.bitEndian == Endian.BigEndian)
             {
-                BixetUtil.ReverseBitsOrder(rawBits);
+                BUtil.ReverseBitsOrder(rawBits);
             }
             rawBits.CopyTo(buf, 0);
             if (this.byteEndian == Endian.SmallEndian)
             {
-                BixetUtil.ReverseByteEndian(buf);
+                BUtil.ReverseByteEndian(buf);
             }
             return (encoding ?? Encoding.Default).GetString(buf);
         }

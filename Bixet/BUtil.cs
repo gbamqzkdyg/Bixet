@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Bixet
 {
-    public static class BixetUtil
+    public static class BUtil
     {
         public const string Version = "0.1.0";
 
@@ -38,7 +38,7 @@ namespace Bixet
         public static void ReverseBitEndian(byte[] bytes)
         {
             BitArray bits = new BitArray(bytes);
-            BixetUtil.ReverseBitEndian(bits);
+            BUtil.ReverseBitEndian(bits);
             bits.CopyTo(bytes, 0);
         }
 
@@ -58,7 +58,7 @@ namespace Bixet
         public static void ReverseBitsOrder(byte[] bytes)
         {
             BitArray bits = new BitArray(bytes);
-            BixetUtil.ReverseBitsOrder(bits);
+            BUtil.ReverseBitsOrder(bits);
             bits.CopyTo(bytes, 0);
         }
 
@@ -78,7 +78,7 @@ namespace Bixet
 
         public static uint ByteLengthOfType(Type T)
         {
-            return BixetUtil.BitLengthOfType(T) / 8;
+            return BUtil.BitLengthOfType(T) / 8;
         }
     }
 }
