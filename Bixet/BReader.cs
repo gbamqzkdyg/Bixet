@@ -114,7 +114,7 @@ namespace Bixet
                 BitArray bits = this.GetRawBits(beginIndex, length);
                 if (this.bitEndian == Endian.SmallEndian)
                 {
-                    BixetUtil.ReverseBits(bits);
+                    BixetUtil.ReverseBitsOrder(bits);
                 }
                 for (int i = 0; i < length; ++i)
                 {
@@ -139,7 +139,7 @@ namespace Bixet
             byte[] buf = new byte[length / 8];
             if (this.bitEndian == Endian.BigEndian)
             {
-                BixetUtil.ReverseBits(rawBits);
+                BixetUtil.ReverseBitsOrder(rawBits);
             }
             rawBits.CopyTo(buf, 0);
             if (this.byteEndian == Endian.SmallEndian)

@@ -5,6 +5,8 @@ namespace Bixet
 {
     public static class BixetUtil
     {
+        public const string Version = "0.1.0";
+
         public static void ReverseByteEndian(byte[] bytes)
         {
             int begin = 0;
@@ -33,7 +35,14 @@ namespace Bixet
             }
         }
 
-        public static void ReverseBits(BitArray bits)
+        public static void ReverseBitEndian(byte[] bytes)
+        {
+            BitArray bits = new BitArray(bytes);
+            BixetUtil.ReverseBitEndian(bits);
+            bits.CopyTo(bytes, 0);
+        }
+
+        public static void ReverseBitsOrder(BitArray bits)
         {
             int hi = bits.Count - 1;
             int lo = 0;
@@ -44,6 +53,13 @@ namespace Bixet
                 bits[hi--] = bits[lo];
                 bits[lo++] = bit;
             }
+        }
+
+        public static void ReverseBitsOrder(byte[] bytes)
+        {
+            BitArray bits = new BitArray(bytes);
+            BixetUtil.ReverseBitsOrder(bits);
+            bits.CopyTo(bytes, 0);
         }
 
         public static uint BitLengthOfType(Type T)
