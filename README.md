@@ -61,11 +61,11 @@ byte[] data = new byte[]{ 0xEF, 0x12, 0x34, 0x56, 0x78, 0xFE};
 <br/>
 从字节数组的指定位置中读取数值或字符串。
 
-###### [<p align="right">返回目录</p>](#本文内容)
-
 ```C#
 public class BReader
 ```
+###### [<p align="right">返回目录</p>](#本文内容)
+
 ### BReader示例
 ```C#
 using System;
@@ -75,27 +75,41 @@ class Program
 {
     static void Main()
     {
-        byte[] data = new byte[] { 0x01, 0x12, 0x34, 0x56, 0x78, 0b10101010, 0b11100100, (byte)'B', (byte)'i', (byte)'x', (byte)'e', (byte)'t' };
+        byte[] data = new byte[] { 
+            0x01, 0x12, 0x34, 0x56, 0x78, 0b10101010, 0b11100100, 
+            (byte)'B', (byte)'i', (byte)'x', (byte)'e', (byte)'t'
+        };
         BReader br = new BReader(data);
         byte aByte = br.ReadValueByByteIndex<byte>(0, 1);
-        Console.WriteLine($"Read a byte from the 0th byte: 0x{Convert.ToString(aByte, 16).PadLeft(2, '0')}");
+        Console.WriteLine($"Read a byte from the 0th byte :" +
+            $"0x{Convert.ToString(aByte, 16).PadLeft(2, '0')}");
         int aInt = br.ReadValueByByteIndex<int>(1, 4);
-        Console.WriteLine($"Read an integer from the 1th-4th bytes: 0x{Convert.ToString(aInt, 16).PadLeft(8, '0')}");
+        Console.WriteLine($"Read an integer from the 1th-4th bytes: " +
+            $"0x{Convert.ToString(aInt, 16).PadLeft(8, '0')}");
         for (int i = 0; i < 8; ++i)
         {
-            Console.WriteLine($"Read a bit from the {i}th bit of the 5th byte: {br.ReadValueByBitIndex<bool>(5, i, 1)}");
-            Console.WriteLine($"The above line is equivalent to read a bit from the {40 + i}th bit: {br.ReadValueByBitIndex<bool>(40 + i, 1)}");
+            Console.WriteLine($"Read a bit from the {i}th bit of the 5th byte: " +
+                $"{br.ReadValueByBitIndex<bool>(5, i, 1)}");
+            Console.WriteLine($"The above line is equivalent to read a bit from the {40 + i}th bit: " +
+                $"{br.ReadValueByBitIndex<bool>(40 + i, 1)}");
         }
         for (int i = 0; i < 4; i++)
         {
-            Console.WriteLine($"Read a byte from the {2 * i}-{2 * i + 1}th bits of the 6th byte: 0x{Convert.ToString(br.ReadValueByBitIndex<byte>(6, 2 * i, 2), 16).PadLeft(2, '0')}");
-            Console.WriteLine($"The above line is equivalent to read a byte from the {48 + 2 * i}-{48 + 2 * i + 1} bits:  0x{Convert.ToString(br.ReadValueByBitIndex<byte>(48 + 2 * i, 2), 16).PadLeft(2, '0')}");
+            Console.WriteLine($"Read a byte from the {2 * i}-{2 * i + 1}th bits of the 6th byte :" +
+                $"0x{Convert.ToString(br.ReadValueByBitIndex<byte>(6, 2 * i, 2), 16).PadLeft(2, '0')}");
+            Console.WriteLine($"The above line is equivalent to read a byte from the {48 + 2 * i}-{48 + 2 * i + 1} bits: " +
+                $"0x{Convert.ToString(br.ReadValueByBitIndex<byte>(48 + 2 * i, 2), 16).PadLeft(2, '0')}");
         }
-        Console.WriteLine($"Read a byte from the 8 bits beginning at the 4th bit of 5th byte: 0x{Convert.ToString(br.ReadValueByBitIndex<byte>(5, 4, 8), 16).PadLeft(2, '0')}");
-        Console.WriteLine($"The above line is equivalent to read a byte from the 8 bits beginning at the 44th bit: 0x{Convert.ToString(br.ReadValueByBitIndex<byte>(44, 8), 16).PadLeft(2, '0')}");
-        Console.WriteLine($"Read a 5 bytes long string with length 5 from the 7th byte: {br.ReadStringByByteIndex(7, 5)}");
-        Console.WriteLine($"The above line is equivalent to read a 40 bits long string from the 0th bit of the 7th byte: {br.ReadStringByByteIndex(7, 5)}");
-        Console.WriteLine($"The above line is equivalent to read a 40 bits long string from the 56th bit: {br.ReadStringByByteIndex(7, 5)}");
+        Console.WriteLine($"Read a byte from the 8 bits beginning at the 4th bit of 5th byte: " +
+            $"0x{Convert.ToString(br.ReadValueByBitIndex<byte>(5, 4, 8), 16).PadLeft(2, '0')}");
+        Console.WriteLine($"The above line is equivalent to read a byte from the 8 bits beginning at the 44th bit: " +
+            $"0x{Convert.ToString(br.ReadValueByBitIndex<byte>(44, 8), 16).PadLeft(2, '0')}");
+        Console.WriteLine($"Read a 5 bytes long string with length 5 from the 7th byte :" +
+            $"{br.ReadStringByByteIndex(7, 5)}");
+        Console.WriteLine($"The above line is equivalent to read a 40 bits long string from the 0th bit of the 7th byte: " +
+            $"{br.ReadStringByByteIndex(7, 5)}");
+        Console.WriteLine($"The above line is equivalent to read a 40 bits long string from the 56th bit: " +
+            $"{br.ReadStringByByteIndex(7, 5)}");
         Console.ReadKey();
 
         /* Output:
