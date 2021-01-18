@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace Bixet.BixetResolver
 {
-    public class BixetVariable
+    public class BVariable
     {
         [JsonIgnore]
-        public const string Version = "0.0.1";
+        public const string Version = "0.1.0";
 
         [JsonProperty]
         public string Name { get; set; }
@@ -33,9 +33,9 @@ namespace Bixet.BixetResolver
         [JsonIgnore]
         public int BitLength { get => this.Length * (this.Unit == LengthUnit.Bit ? 1 : 8); }
 
-        public BixetVariable() { }
+        public BVariable() { }
 
-        public BixetVariable(BixetVariable bv)
+        public BVariable(BVariable bv)
         {
             this.Name = bv.Name;
             this.Unit = bv.Unit;
@@ -53,7 +53,7 @@ namespace Bixet.BixetResolver
 
         public override bool Equals(object obj)
         {
-            return obj is BixetVariable variable &&
+            return obj is BVariable variable &&
                    Name == variable.Name &&
                    Unit == variable.Unit &&
                    ValueType == variable.ValueType &&

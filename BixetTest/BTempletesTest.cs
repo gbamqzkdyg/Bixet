@@ -13,59 +13,59 @@ using System.IO;
 namespace BixetTest
 {
     [TestClass]
-    public class BixetTempletesTest
+    public class BTempletesTest
     {
-        private BixetTemplete CreateTemplete()
+        private BTemplete CreateTemplete()
         {
-            BixetTemplete bt = new BixetTemplete();
+            BTemplete bt = new BTemplete();
             bt.Name = "Test";
-            BixetBlock bb = new BixetBlock()
+            BBlock bb = new BBlock()
             {
                 Name = "T1",
                 Description = "A test for bb",
                 Repeat = 1,
             };
-            bb.AddVariable(new BixetVariable()
+            bb.AddVariable(new BVariable()
             {
                 Name = "ID",
                 Length = 1,
                 Unit = LengthUnit.Byte,
                 ValueType = BitexValueType.Number,
             });
-            bb.AddVariable(new BixetVariable()
+            bb.AddVariable(new BVariable()
             {
                 Name = "Value",
                 Length = 4,
                 Unit = LengthUnit.Byte,
                 ValueType = BitexValueType.Number,
             });
-            bb.AddBlock(new BixetBlock()
+            bb.AddBlock(new BBlock()
             {
                 Name = "OneBits",
                 Description = "8 one-bit variables",
                 Repeat = 8,
             });
-            bb.Blocks["OneBits"].AddVariable(new BixetVariable()
+            bb.Blocks["OneBits"].AddVariable(new BVariable()
             {
                 Name = "OneBitss",
                 Length = 1,
                 Unit = LengthUnit.Bit,
                 ValueType = BitexValueType.Number,
             });
-            bb.AddBlock(new BixetBlock()
+            bb.AddBlock(new BBlock()
             {
                 Name = "TwoBits",
                 Description = "4 two-bits variables",
                 Repeat = 4,
             });
-            bb.Blocks["TwoBits"].AddVariable(new BixetVariable()
+            bb.Blocks["TwoBits"].AddVariable(new BVariable()
             {
                 Name = "TwoBitss",
                 Length = 2,
                 Unit = LengthUnit.Bit,
                 ValueType = BitexValueType.Number,
             });
-            bb.AddVariable(new BixetVariable()
+            bb.AddVariable(new BVariable()
             {
                 Name = "Hello",
                 Length = 5,
@@ -76,7 +76,7 @@ namespace BixetTest
             return bt;
         }
 
-        private void Serialize(BixetTemplete bt)
+        private void Serialize(BTemplete bt)
         {
             JsonSerializer js = new JsonSerializer();
             using (JsonTextWriter jw = new JsonTextWriter(new StreamWriter("Test.json")))
@@ -85,12 +85,12 @@ namespace BixetTest
             }
         }
 
-        private BixetTemplete Deserialzie()
+        private BTemplete Deserialzie()
         {
             JsonSerializer js = new JsonSerializer();
             using (JsonTextReader jr = new JsonTextReader(new StreamReader("Test.json")))
             {
-                BixetTemplete btt = js.Deserialize<BixetTemplete>(jr);
+                BTemplete btt = js.Deserialize<BTemplete>(jr);
                 return btt;
             }
         }
@@ -98,7 +98,7 @@ namespace BixetTest
         [TestMethod]
         public void TestSerialization()
         {
-            BixetTemplete bt = CreateTemplete();
+            BTemplete bt = CreateTemplete();
             Serialize(bt);
             Deserialzie().Should().Be(bt);
             

@@ -4,38 +4,38 @@ using System.Linq;
 
 namespace Bixet.BixetResolver
 {
-    public class BixetTemplete
+    public class BTemplete
     {
         [JsonIgnore]
-        public const string Version = "0.0.1";
+        public const string Version = "0.1.0";
 
         [JsonProperty]
         public string Name { get; set; }
 
         [JsonProperty]
-        public IDictionary<string, BixetBlock> Templetes { get; set; } = new Dictionary<string, BixetBlock>();
+        public IDictionary<string, BBlock> Templetes { get; set; } = new Dictionary<string, BBlock>();
 
-        public BixetTemplete() { }
+        public BTemplete() { }
 
-        public BixetTemplete(BixetTemplete bt)
+        public BTemplete(BTemplete bt)
         {
             this.Name = bt.Name;
             this.Templetes = bt.Templetes;
         }
 
-        public BixetBlock this[string name]
+        public BBlock this[string name]
         {
             get => this.Templetes[name];
         }
 
-        public void Add(BixetBlock bb)
+        public void Add(BBlock bb)
         {
             this.Templetes.Add(bb.Name, bb);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is BixetTemplete templete &&
+            return obj is BTemplete templete &&
                    Name == templete.Name &&
                    Templetes.SequenceEqual(templete.Templetes);
         }
@@ -44,7 +44,7 @@ namespace Bixet.BixetResolver
         {
             int hashCode = 1780610354;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IDictionary<string, BixetBlock>>.Default.GetHashCode(Templetes);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IDictionary<string, BBlock>>.Default.GetHashCode(Templetes);
             return hashCode;
         }
     }

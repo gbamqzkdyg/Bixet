@@ -44,9 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BixetResolver\BixetBlock.cs" />
-    <Compile Include="BixetResolver\BixetTemplete.cs" />
-    <Compile Include="BixetResolver\BixetVariable.cs" />
+    <Compile Include="BixetResolver\BBlock.cs" />
+    <Compile Include="BixetResolver\BTemplete.cs" />
+    <Compile Include="BixetResolver\BVariable.cs" />
     <Compile Include="BReader.cs" />
     <Compile Include="BixetUtil.cs" />
     <Compile Include="BWriter.cs" />

@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Bixet.BixetResolver
 {
-    public class BixetBlock
+    public class BBlock
     {
         [JsonIgnore]
-        public const string Version = "0.0.1";
+        public const string Version = "0.1.0";
 
         [JsonProperty]
         public string Name { get; set; }
@@ -22,10 +22,10 @@ namespace Bixet.BixetResolver
         public IList<string> Children { get; set; } = new List<string>();
 
         [JsonProperty]
-        public IDictionary<string, BixetVariable> Variables { get; set; } = new Dictionary<string, BixetVariable>();
+        public IDictionary<string, BVariable> Variables { get; set; } = new Dictionary<string, BVariable>();
 
         [JsonProperty]
-        public IDictionary<string, BixetBlock> Blocks { get; set; } = new Dictionary<string, BixetBlock>();
+        public IDictionary<string, BBlock> Blocks { get; set; } = new Dictionary<string, BBlock>();
 
         [JsonIgnore]
         public int BitLength { get => this.GetBitLength(); }
@@ -33,25 +33,25 @@ namespace Bixet.BixetResolver
         [JsonIgnore]
         public int ByteLength { get => (this.BitLength + 7) / 8; }
 
-        public BixetBlock() { }
+        public BBlock() { }
 
-        public BixetBlock(BixetBlock bb)
+        public BBlock(BBlock bb)
         {
             this.Name = bb.Name;
             this.Description = bb.Description;
             this.Repeat = bb.Repeat;
             this.Children = new List<string>(bb.Children);
-            this.Variables = new Dictionary<string, BixetVariable>(bb.Variables);
-            this.Blocks = new Dictionary<string, BixetBlock>(bb.Blocks);
+            this.Variables = new Dictionary<string, BVariable>(bb.Variables);
+            this.Blocks = new Dictionary<string, BBlock>(bb.Blocks);
         }
 
-        public void AddBlock(BixetBlock bb)
+        public void AddBlock(BBlock bb)
         {
             this.AddChild(bb.Name);
             this.Blocks.Add(bb.Name, bb);
         }
 
-        public void AddVariable(BixetVariable bv)
+        public void AddVariable(BVariable bv)
         {
             this.AddChild(bv.Name);
             this.Variables.Add(bv.Name, bv);
@@ -71,7 +71,7 @@ namespace Bixet.BixetResolver
 
         public override bool Equals(object obj)
         {
-            return obj is BixetBlock block &&
+            return obj is BBlock block &&
                    Name == block.Name &&
                    Description == block.Description &&
                    Repeat == block.Repeat &&
@@ -89,8 +89,8 @@ namespace Bixet.BixetResolver
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Description);
             hashCode = hashCode * -1521134295 + Repeat.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<IList<string>>.Default.GetHashCode(Children);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IDictionary<string, BixetVariable>>.Default.GetHashCode(Variables);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IDictionary<string, BixetBlock>>.Default.GetHashCode(Blocks);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IDictionary<string, BVariable>>.Default.GetHashCode(Variables);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IDictionary<string, BBlock>>.Default.GetHashCode(Blocks);
             hashCode = hashCode * -1521134295 + BitLength.GetHashCode();
             hashCode = hashCode * -1521134295 + ByteLength.GetHashCode();
             return hashCode;
