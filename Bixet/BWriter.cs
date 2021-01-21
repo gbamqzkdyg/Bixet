@@ -4,7 +4,7 @@ namespace Bixet
 {
     public class BWriter
     {
-        public const string verion = "0.4.0";
+        public const string verion = "0.4.1";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly System.Collections.BitArray bits;
@@ -168,7 +168,7 @@ namespace Bixet
             }
         }
 
-        public void WriteStringByBitIndex(int byteIndex, int bitIndex, string s, int length, Endian bitEndian, System.Text.Encoding encoding = null)
+        public void WriteStringByBitIndex(int byteIndex, int bitIndex, string s, int length, Endian bitEndian = Endian.SmallEndian, System.Text.Encoding encoding = null)
         {
             this.WriteStringByBitIndex(byteIndex * 8 + bitIndex, s, length, bitEndian, encoding);
         }
