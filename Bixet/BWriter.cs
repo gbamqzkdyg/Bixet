@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections;
-using System.Text;
 
 namespace Bixet
 {
     public class BWriter
     {
-        public const string Verion = "0.3.0";
+        public const string verion = "0.4.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
-        private readonly BitArray bits;
+        private readonly System.Collections.BitArray bits;
         public int BytesCount { get { return this.bits.Count / 8; } }
         public int BitsCount { get { return this.bits.Count; } }
 
         public BWriter(int byteLength)
         {
             if (byteLength <= 0) throw new ArgumentOutOfRangeException("给定的参数异常");
-            this.bits = new BitArray(byteLength * 8);
+            this.bits = new System.Collections.BitArray(byteLength * 8);
         }
 
         public byte this[int i]
@@ -32,7 +30,7 @@ namespace Bixet
         private void SetSingleByte(int index, byte value)
         {
             if(index >= this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            BitArray tmp = new BitArray(new byte[] { value });
+            System.Collections.BitArray tmp = new System.Collections.BitArray(new byte[] { value });
             index *= 8;
             for(int i = 0; i < 8; ++i)
             {
@@ -51,7 +49,7 @@ namespace Bixet
             if(destIndex < 0 || length <= 0 || destIndex + length > this.BytesCount || offset + length > bytes.Length) throw new ArgumentOutOfRangeException("给定的参数异常");
             byte[] tmp = new byte[length];
             Array.Copy(bytes, offset, tmp, 0, length);
-            BitArray ba = new BitArray(tmp);
+            System.Collections.BitArray ba = new System.Collections.BitArray(tmp);
             destIndex *= 8;
             length *= 8;
             for (int i = 0; i < length; ++i) this.bits[destIndex++] = ba[i];
@@ -62,13 +60,13 @@ namespace Bixet
             this.SetRawBytes(destIndex, bytes, 0, bytes.Length);
         }
 
-        public void SetRawBits(int destIndex, BitArray bits, int offset, int length)
+        public void SetRawBits(int destIndex, System.Collections.BitArray bits, int offset, int length)
         {
             if (destIndex < 0 || offset < 0 || length <= 0 || destIndex + length > this.BitsCount || offset + length > bits.Count) throw new ArgumentOutOfRangeException("给定的参数异常");
             for (int i = 0; i < length; ++i) this.bits[destIndex++] = bits[offset++];
         }
 
-        public void SetRawBits(int byteIndex, int bitIndex, BitArray bits, int offset, int length)
+        public void SetRawBits(int byteIndex, int bitIndex, System.Collections.BitArray bits, int offset, int length)
         {
             this.SetRawBits(byteIndex * 8 + bitIndex, bits, offset, length);
         }
@@ -143,10 +141,10 @@ namespace Bixet
             this.WriteValueByBitIndex<T>(byteIndex * 8 + bitIndex, value, length);
         }
 
-        public void WriteStringByByteIndex(int beginIndex, string s, int length, Endian byteEndian = Endian.BigEndian, Encoding encoding = null)
+        public void WriteStringByByteIndex(int beginIndex, string s, int length, Endian byteEndian = Endian.BigEndian, System.Text.Encoding encoding = null)
         {
             if (beginIndex < 0 || s == null || length <= 0 || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            byte[] bytes = (encoding ?? Encoding.Default).GetBytes(s);
+            byte[] bytes = (encoding ?? System.Text.Encoding.Default).GetBytes(s);
             if(bytes.Length < length) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (byteEndian == Endian.BigEndian) this.SetRawBytes(beginIndex, bytes, 0, length);
             else
@@ -156,11 +154,11 @@ namespace Bixet
             }   
         }
 
-        public void WriteStringByBitIndex(int beginIndex, string s, int length, Endian bitEndian = Endian.SmallEndian, Encoding encoding = null)
+        public void WriteStringByBitIndex(int beginIndex, string s, int length, Endian bitEndian = Endian.SmallEndian, System.Text.Encoding encoding = null)
         {
             if (beginIndex < 0 || s == null || length <= 0 || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (length % 8 != 0) throw new FormatException("待转换比特不为整字节");
-            BitArray bits = new BitArray((encoding ?? Encoding.Default).GetBytes(s));
+            System.Collections.BitArray bits = new System.Collections.BitArray((encoding ?? System.Text.Encoding.Default).GetBytes(s));
             if (bits.Count < length) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (bitEndian == Endian.SmallEndian) this.SetRawBits(beginIndex, bits, 0, length);
             else
@@ -170,7 +168,7 @@ namespace Bixet
             }
         }
 
-        public void WriteStringByBitIndex(int byteIndex, int bitIndex, string s, int length, Endian bitEndian, Encoding encoding = null)
+        public void WriteStringByBitIndex(int byteIndex, int bitIndex, string s, int length, Endian bitEndian, System.Text.Encoding encoding = null)
         {
             this.WriteStringByBitIndex(byteIndex * 8 + bitIndex, s, length, bitEndian, encoding);
         }
