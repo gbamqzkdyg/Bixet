@@ -2,15 +2,23 @@
 ---
 ### 本文内容
 >#### [1. 项目描述](#项目描述)
->>##### [1-1. 项目介绍](#项目介绍)
->>##### [1-2. 项目依赖](#项目依赖)
->>>###### [1-2-1. 运行环境](#运行环境)
->>>###### [1-2-2. 项目依赖命名空间](#项目依赖命名空间)
->>##### [1-3. 使用方法](#使用方法)
->>##### [1-4. 数据内存布局](#数据内存布局)
->#### [3. BReader类](#BReader类)
->>##### [3.1 BReader示例](#BReader示例)
-
+>>##### [1.1. 项目介绍](#项目介绍)
+>>##### [1.2. 项目依赖](#项目依赖)
+>>>###### [1.2.1. 运行环境](#运行环境)
+>>>###### [1.2.2. 项目依赖命名空间](#项目依赖命名空间)
+>>##### [1.3. 使用方法](#使用方法)
+>>##### [1.4. 数据内存布局](#数据内存布局)
+>#### [2. 枚举类](#枚举类)
+>#### [3. BUtil类](#BUtil类)
+>>##### [3.1 类内常量](#BUtil类内常量)
+>>##### [3.1 方法](#BUtil方法)
+>#### [4. BReader类](#BReader类)
+>>##### [4.1 示例](#BReader示例)
+>>##### [4.2 构造函数](#BReader构造函数)
+>>##### [4.3 类内常量](BReader#类内常量)
+>>##### [4.4 属性](#BReader属性)
+>>##### [4.5 运算符重载](#BReader运算符重载)
+>>##### [4.6 方法](#BReader方法)
 ---
 ## 项目描述
 ### 项目介绍
@@ -56,11 +64,52 @@ byte[] data = new byte[]{ 0xEF, 0x12, 0x34, 0x56, 0x78, 0xFE};
 ###### [<p align="right">返回目录</p>](#本文内容)
 ***
 
+## BUtil类
+<div style="font-size:70%">命名空间：Bixet</div>
+<div style="font-size:70%">程序集：Bixet.dll</div>
+
+</br>
+对比特数据或字节数据进行操作的工具方法集合静态类。
+
+```C#
+public static class BUtil
+```
+
+### BUtil类内常量
+|常量名|说明|
+|-|-|
+|**version**|BUtil的版本号|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BUtil方法
+|方法签名|说明|
+|-|-|
+|public static _void_ ReverseByteEndian(_byte[]_ **bytes**)|逆转**byte**中全部字节的字节序|
+|public static _void_ ReverseByteEndian(_byte[]_ **bytes**, int **begin**, int **end**)|逆转**bytes**的第**begin**个字节至第**end**个字节的字节序|
+|public static _void_ ReverseBitEndian(_byte[]_ **bytes**)|逆转**bytes**的每个字节的比特序|
+|public static _void_ ReverseBitEndian(_System.Collections.BitArray_ **bits**)|按照8比特1组逆转**bits**中全部各组比特的比特序</br>_注：**bits**的长度必须为8的整数倍_|
+|public static _void_ ReverseBitEndian(_System.Collections.BitArray_ **bits**, _int_ **begin**, _int_ **end**)|按照8比特1组逆转**bits**中从第**begin**至第**end**个比特中的全部各组比特的比特序</br>_注：**end** - **begin** 的长度必须为8的整数倍|
+|public static _void_ ReverseBitsOrder(_byte[]_ **bytes**)|逆转**bytes**全部比特的顺序|
+|public static _void_ ReverseBitsOrder(_System.Collections.BitArray_ **bits**)|逆转**bits**全部比特的顺序|
+|public static _void_ ReverseBitsOrder(_System.Collections.BitArray_ **bits**, _int_ **begin**, _int_ **end**)|逆转**bits**的第**begin**个比特至第**end**个比特的顺序|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+## 枚举类
+<div style="font-size:70%">命名空间：Bixet</div>
+<div style="font-size:70%">程序集：Bixet.dll</div>
+</br>
+用于描述数据及数据结构性质的枚举类。
+
+|类名|说明|枚举值|
+|-|-|-|
+|**Endian**|字节或比特的排布顺序|**BigEndian**: 大端序</br>**SmallEndian**:小端序|
+###### [<p align="right">返回目录</p>](#本文内容)
+
 ## BReader类
 <div style="font-size:70%">命名空间：Bixet</div>
 <div style="font-size:70%">程序集：Bixet.dll</div>
 
-<br/>
+</br>
 从字节数组的指定位置中读取数值或字符串。
 
 ```C#
@@ -150,4 +199,48 @@ class Program
     }
 }
 ```
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BReader构造函数
+|构造函数签名|说明|
+|-|-|
+|BReader(_byte[]_ **bytes**)|以**bytes**的全部字节作为可读取数据|
+|BReader(_byte[]_ **bytes**, _int_ **length**)|以**bytes**的前**length**个字节作为可读取数据|
+|BReader(_byte[]_ **bytes**, _int_ **offset**, _int_ **length**)|以**bytes**中从**offset**个字节开始的**length**个字节作为可读取数据|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BReader类内常量
+|常量名|说明|
+|-|-|
+|public const _string_ **version**|BReader的版本号|
+|public const _int_ **maxBytesLength**|单次可读取的最大字节数|
+|public const _int_ **maxBitsLength**|单次可读取的最大比特数|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BReader属性
+|属性名|说明|
+|-|-|
+|**BytesCount**|可读取数据数据字节数|
+|**BitsCount**|可读取数据比特数|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BReader运算符重载
+|运算符签名|说明|
+|-|-|
+|public _byte_ this[_int_ **i**]|获取可读取数据的第**i**个字节|
+|public _byte_ this[_int_ **i**, _int_ **j**]|获取可读取数据的第**i**个字节的第**j**个比特（结果以字节表示）|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BReader方法
+|方法签名|说明|
+|-|-|
+|public _byte[]_ GetRawBytes(int **beginIndex**, int **length**)|获取可读取数据从第**beginIndex**个字节处开始的**length**个字节|
+|public _System.Collections.BitArray_ GetRawBits(int **beginIndex**, int **length**)|获取可读取数据从第**beginIndex**个比特处开始的**length**个比特|
+|public _System.Collections.BitArray_ GetRawBits(int **byteIndex**, int **bitIndex**, int **length**)|获取可读取数据从第**byteIndex**个字节的第**bitIndex**个比特处开始的**length**个比特|
+|public **T** ReadValueByByteIndex&#60;**T**&#62;(int **beginIndex**, int **length**, Endian **byteEndian** = Endian.BigEndian)|将可读取数据的从第**beginIndex**个字节开始的**length**个字节按照**byteEndian**的字节序读取为**T**类型的数值</br>_注：支持读取的数值的字节数不能超过**maxBytesLength**，支持读取的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public **string** ReadStringByByteIndex(int **beginIndex**, int **length**, Endian **byteEndian** = Endian.BigEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**beginIndex**个字节开始的**length**个字节按照**byteEndian**的字节序以**encoding**编码方式读取为字符串</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public **T** ReadValueByBitIndex&#60;**T**&#62;(int **beginIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian)|将可读取数据的从第**beginIndex**个比特开始的**length**个比特按照**bitEndian**的比特序读取为**T**类型的数值</br>_注：支持读取的数值的比特数不能超过**maxBitsLength**，支持读取的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public **T** ReadValueByBitIndex&#60;**T**&#62;(int **byteIndex**, int **bitIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian)|将可读取数据的从第**byteIndex**个字节的第**bitIndex**个比特开始的**length**个比特按照**bitEndian**的比特序读取为**T**类型的数值</br>_注：支持读取的数值的最大比特数与支持类型与前一方法相同_|
+|public **string** ReadStringByBitIndex(int **beginIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**beginIndex**个比特开始的**length**个比特按照**bitEndian**的比特序以**encoding**编码方式读取为字符串</br>_注：输入的**length**参数长度必须为8的整数倍；若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public **string** ReadStringByBitIndex(int **byteIndex**, int **bitIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**byteIndex**个字节的第**bitIndex**个比特开始的**length**个比特按照**bitEndian**的比特序以**encoding**编码方式读取为字符串</br>_注：输入的**length**参数长度必须为8的整数倍；若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
 ###### [<p align="right">返回目录</p>](#本文内容)

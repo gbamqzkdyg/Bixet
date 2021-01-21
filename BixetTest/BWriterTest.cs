@@ -2,8 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using System;
-using System.Collections;
 using System.Text;
+using System.Collections;
 
 namespace BixetTest
 {

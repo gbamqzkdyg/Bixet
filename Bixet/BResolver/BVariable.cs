@@ -8,7 +8,7 @@ namespace Bixet.BixetResolver
     public class BVariable
     {
         [JsonIgnore]
-        public const string Version = "0.1.0";
+        public const string version = "0.1.0";
 
         [JsonProperty]
         public string Name { get; set; }

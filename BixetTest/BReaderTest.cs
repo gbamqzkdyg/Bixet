@@ -125,9 +125,6 @@ namespace BixetTest
             byte[] bixetBytes = Encoding.Default.GetBytes("bixet");
             br = new BReader(bixetBytes);
             br.ReadStringByBitIndex(0, 40).Should().Be("bixet");
-            byte[] bixetReverseBytes = new byte[] { this.ReverseByte((byte)'t'), this.ReverseByte((byte)'e'), this.ReverseByte((byte)'x'), this.ReverseByte((byte)'i'), this.ReverseByte((byte)'b'), };
-            br = new BReader(bixetReverseBytes);
-            br.ReadStringByBitIndex(0, 40, Endian.BigEndian, Endian.SmallEndian).Should().Be("texib");
             byte[] bixetComplexBytes = new byte[] { 0x7F, 0b10110001, 0b00110100, 0b10111100, 0b00110010, 0b10111010 };
             br = new BReader(bixetComplexBytes);
             br.ReadStringByBitIndex(7, 40).Should().Be("bixet");

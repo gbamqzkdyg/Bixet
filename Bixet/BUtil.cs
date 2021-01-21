@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 
 namespace Bixet
 {
     public static class BUtil
     {
-        public const string Version = "0.2.0";
+        public const string version = "0.2.0";
 
         public static void ReverseByteEndian(byte[] bytes, int begin, int end)
         {
@@ -24,7 +23,7 @@ namespace Bixet
             BUtil.ReverseByteEndian(bytes, 0, bytes.Length - 1);
         }
 
-        public static void ReverseBitEndian(BitArray bits, int begin, int end)
+        public static void ReverseBitEndian(System.Collections.BitArray bits, int begin, int end)
         {
             if (begin < 0 || end < 0 || begin >= end) throw new ArgumentOutOfRangeException("待转换序号有误");
             int count = end - begin + 1;
@@ -41,34 +40,37 @@ namespace Bixet
             }
         }
 
-        public static void ReverseBitEndian(BitArray bits)
+        public static void ReverseBitEndian(System.Collections.BitArray bits)
         {
             BUtil.ReverseBitEndian(bits, 0, bits.Count - 1);
         }
 
         public static void ReverseBitEndian(byte[] bytes)
         {
-            BitArray bits = new BitArray(bytes);
+            System.Collections.BitArray bits = new System.Collections.BitArray(bytes);
             BUtil.ReverseBitEndian(bits);
             bits.CopyTo(bytes, 0);
         }
 
-        public static void ReverseBitsOrder(BitArray bits)
+        public static void ReverseBitsOrder(System.Collections.BitArray bits, int begin, int end)
         {
-            int hi = bits.Count - 1;
-            int lo = 0;
             bool bit;
-            while(lo < hi)
+            while(begin < end)
             {
-                bit = bits[hi];
-                bits[hi--] = bits[lo];
-                bits[lo++] = bit;
+                bit = bits[end];
+                bits[end--] = bits[begin];
+                bits[begin++] = bit;
             }
+        }
+
+        public static void ReverseBitsOrder(System.Collections.BitArray bits)
+        {
+            BUtil.ReverseBitsOrder(bits, 0, bits.Count - 1);
         }
 
         public static void ReverseBitsOrder(byte[] bytes)
         {
-            BitArray bits = new BitArray(bytes);
+            System.Collections.BitArray bits = new System.Collections.BitArray(bytes);
             BUtil.ReverseBitsOrder(bits);
             bits.CopyTo(bytes, 0);
         }
