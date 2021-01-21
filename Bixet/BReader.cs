@@ -6,29 +6,25 @@ namespace Bixet
 {
     public class BReader
     {
-        public const string Verion = "0.3.0";
+        public const string Verion = "0.4.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
-        private readonly Endian byteEndian;
-        private readonly Endian bitEndian;
         private readonly byte[] bytes;
         private readonly BitArray bits;
         public int BytesCount { get { return this.bytes.Length; } }
         public int BitsCount { get { return this.bits.Count; } }
 
-        public BReader(byte[] bytes, int offset, int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
+        public BReader(byte[] data, int offset, int byteLength)
         {
-            if (bytes == null || offset < 0 || byteLength <= 0 || offset + byteLength > bytes.Length) throw new ArgumentOutOfRangeException("给定的参数异常");
-            this.byteEndian = byteEndian;
-            this.bitEndian = bitEndian;
+            if (data == null || offset < 0 || byteLength <= 0 || offset + byteLength > data.Length) throw new ArgumentOutOfRangeException("给定的参数异常");
             this.bytes = new byte[byteLength];
-            Array.Copy(bytes, offset, this.bytes, 0, byteLength);
+            Array.Copy(data, offset, this.bytes, 0, byteLength);
             this.bits = new BitArray(this.bytes);
         }
 
-        public BReader(byte[] bytes, int length, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, length, byteEndian, bitEndian) { }
+        public BReader(byte[] bytes, int length) : this(bytes, 0, length) { }
 
-        public BReader(byte[] bytes, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian) : this(bytes, 0, bytes.Length, byteEndian, bitEndian) { }
+        public BReader(byte[] bytes) : this(bytes, 0, bytes.Length) { }
 
         public byte this[int i]
         {
@@ -73,7 +69,7 @@ namespace Bixet
             return this.GetRawBits(byteIndex * 8 + bitIndex, length);
         }
 
-        public T ReadValueByByteIndex<T>(int beginIndex, int length)
+        public T ReadValueByByteIndex<T>(int beginIndex, int length, Endian byteEndian = Endian.BigEndian)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             uint maxLength = BUtil.ByteLengthOfType(typeof(T));
@@ -81,11 +77,11 @@ namespace Bixet
             if (maxLength > 0)
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳字节数小于待转换字节数");
-                if (this.byteEndian == Endian.SmallEndian) beginIndex += length - 1;
+                if (byteEndian == Endian.SmallEndian) beginIndex += length - 1;
                 for (int i = 0; i < length; ++i)
                 {
                     res <<= 8;
-                    if (this.byteEndian == Endian.SmallEndian) res += this[beginIndex--];
+                    if (byteEndian == Endian.SmallEndian) res += this[beginIndex--];
                     else res += this[beginIndex++];
                 }
             }
@@ -93,17 +89,17 @@ namespace Bixet
             return (T)Convert.ChangeType(res, typeof(T));
         }
 
-        public string ReadStringByByteIndex(int beginIndex, int length, Encoding encoding = null)
+        public string ReadStringByByteIndex(int beginIndex, int length, Endian byteEndian = Endian.BigEndian, Encoding encoding = null)
         {
             if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
-            if(this.byteEndian == Endian.BigEndian) return (encoding ?? Encoding.Default).GetString(this.bytes, beginIndex, length);
+            if(byteEndian == Endian.BigEndian) return (encoding ?? Encoding.Default).GetString(this.bytes, beginIndex, length);
             byte[] tmp = new byte[length];
             beginIndex += length - 1;
             for(int i = 0; i < length; ++i) tmp[i] = this[beginIndex--];
             return (encoding ?? Encoding.Default).GetString(tmp);
         }
 
-        public T ReadValueByBitIndex<T>(int beginIndex, int length)
+        public T ReadValueByBitIndex<T>(int beginIndex, int length, Endian bitEndian = Endian.SmallEndian)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             uint maxLength = BUtil.BitLengthOfType(typeof(T));
@@ -112,7 +108,7 @@ namespace Bixet
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳比特数小于待转换比特数");
                 BitArray bits = this.GetRawBits(beginIndex, length);
-                if (this.bitEndian == Endian.SmallEndian)
+                if (bitEndian == Endian.SmallEndian)
                 {
                     BUtil.ReverseBitsOrder(bits);
                 }
@@ -126,32 +122,32 @@ namespace Bixet
             return (T)Convert.ChangeType(res, typeof(T));
         }
 
-        public T ReadValueByBitIndex<T>(int byteIndex, int bitIndex, int length)
+        public T ReadValueByBitIndex<T>(int byteIndex, int bitIndex, int length, Endian bitEndian = Endian.SmallEndian)
         {
-            return this.ReadValueByBitIndex<T>(8 * byteIndex + bitIndex, length);
+            return this.ReadValueByBitIndex<T>(8 * byteIndex + bitIndex, length, bitEndian);
         }
 
-        public string ReadStringByBitIndex(int beginIndex, int length, Encoding encoding = null)
+        public string ReadStringByBitIndex(int beginIndex, int length, Endian bitEndian = Endian.SmallEndian, Endian byteEndian = Endian.BigEndian, Encoding encoding = null)
         {
             if (beginIndex < 0 || length <= 0 || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (length % 8 != 0) throw new FormatException("待转换比特不为整字节");
             BitArray rawBits = this.GetRawBits(beginIndex, length);
             byte[] buf = new byte[length / 8];
-            if (this.bitEndian == Endian.BigEndian)
+            if (bitEndian == Endian.BigEndian)
             {
                 BUtil.ReverseBitsOrder(rawBits);
             }
             rawBits.CopyTo(buf, 0);
-            if (this.byteEndian == Endian.SmallEndian)
+            if (byteEndian == Endian.SmallEndian)
             {
                 BUtil.ReverseByteEndian(buf);
             }
             return (encoding ?? Encoding.Default).GetString(buf);
         }
 
-        public string ReadStringByBitIndex(int byteIndex, int bitIndex, int length, Encoding encoding = null)
+        public string ReadStringByBitIndex(int byteIndex, int bitIndex, int length, Endian bitEndian = Endian.SmallEndian, Endian byteEndian = Endian.BigEndian, Encoding encoding = null)
         {
-            return this.ReadStringByBitIndex(byteIndex * 8 + bitIndex, length, encoding);
+            return this.ReadStringByBitIndex(byteIndex * 8 + bitIndex, length, bitEndian, byteEndian, encoding);
         }
 
         
