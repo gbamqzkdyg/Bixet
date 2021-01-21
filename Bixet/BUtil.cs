@@ -5,12 +5,11 @@ namespace Bixet
 {
     public static class BUtil
     {
-        public const string Version = "0.1.0";
+        public const string Version = "0.2.0";
 
-        public static void ReverseByteEndian(byte[] bytes)
+        public static void ReverseByteEndian(byte[] bytes, int begin, int end)
         {
-            int begin = 0;
-            int end = bytes.Length - 1;
+            if (begin < 0 || end < 0 || begin >= end) throw new ArgumentOutOfRangeException("待转换序号有误");
             byte tmp;
             while (begin < end)
             {
@@ -20,11 +19,18 @@ namespace Bixet
             }
         }
 
-        public static void ReverseBitEndian(BitArray bits)
+        public static void ReverseByteEndian(byte[] bytes)
         {
-            if(bits.Count % 8 != 0) throw new FormatException("待转换比特不为整字节");
+            BUtil.ReverseByteEndian(bytes, 0, bytes.Length - 1);
+        }
+
+        public static void ReverseBitEndian(BitArray bits, int begin, int end)
+        {
+            if (begin < 0 || end < 0 || begin >= end) throw new ArgumentOutOfRangeException("待转换序号有误");
+            int count = end - begin + 1;
+            if(count % 8 != 0) throw new FormatException("待转换比特不为整字节");
             bool tmp;
-            for (int i = 0; i < bits.Count; i += 8)
+            for (int i = begin; i <= end; i += 8)
             {
                 for (int j = 0; j < 4; ++j)
                 {
@@ -33,6 +39,11 @@ namespace Bixet
                     bits[i + 7 - j] = tmp;
                 }
             }
+        }
+
+        public static void ReverseBitEndian(BitArray bits)
+        {
+            BUtil.ReverseBitEndian(bits, 0, bits.Count - 1);
         }
 
         public static void ReverseBitEndian(byte[] bytes)

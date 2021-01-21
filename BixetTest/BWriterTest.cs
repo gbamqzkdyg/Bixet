@@ -75,8 +75,8 @@ namespace BixetTest
             res[2].Should().Be(0x34);
             res[3].Should().Be(0x56);
             res[4].Should().Be(0x78);
-            bw = new BWriter(5, Endian.SmallEndian);
-            bw.WriteValueByByteIndex<ulong>(1, 0xAABBCCDD12345678, 4);
+            bw = new BWriter(5);
+            bw.WriteValueByByteIndex<ulong>(1, 0xAABBCCDD12345678, 4, Endian.SmallEndian);
             res = bw.GetData();
             res[1].Should().Be(0x78);
             res[2].Should().Be(0x56);
@@ -106,8 +106,8 @@ namespace BixetTest
             BWriter bw = new BWriter(10);
             bw.WriteStringByByteIndex(2, "bixet", 5);
             Encoding.Default.GetString(bw.GetData(), 2, 5).Should().Be("bixet");
-            bw = new BWriter(10, Endian.SmallEndian);
-            bw.WriteStringByByteIndex(2, "texib", 5);
+            bw = new BWriter(10);
+            bw.WriteStringByByteIndex(2, "texib", 5, Endian.SmallEndian);
             Encoding.Default.GetString(bw.GetData(), 2, 5).Should().Be("bixet");
         }
 

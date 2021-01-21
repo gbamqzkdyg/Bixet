@@ -6,21 +6,17 @@ namespace Bixet
 {
     public class BWriter
     {
-        public const string Verion = "0.2.0";
+        public const string Verion = "0.3.0";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly BitArray bits;
-        private readonly Endian byteEndian;
-        private readonly Endian bitEndian;
         public int BytesCount { get { return this.bits.Count / 8; } }
         public int BitsCount { get { return this.bits.Count; } }
 
-        public BWriter(int byteLength, Endian byteEndian = Endian.BigEndian, Endian bitEndian = Endian.SmallEndian)
+        public BWriter(int byteLength)
         {
             if (byteLength <= 0) throw new ArgumentOutOfRangeException("给定的参数异常");
             this.bits = new BitArray(byteLength * 8);
-            this.byteEndian = byteEndian;
-            this.bitEndian = bitEndian;
         }
 
         public byte this[int i]
@@ -77,7 +73,7 @@ namespace Bixet
             this.SetRawBits(byteIndex * 8 + bitIndex, bits, offset, length);
         }
 
-        public void WriteValueByByteIndex<T>(int beginIndex, T value, int length)
+        public void WriteValueByByteIndex<T>(int beginIndex, T value, int length, Endian byteEndian = Endian.BigEndian)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBytesSize || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             uint maxLength = BUtil.ByteLengthOfType(typeof(T));
@@ -85,14 +81,14 @@ namespace Bixet
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳字节数小于待转换字节数");
                 ulong l = (ulong)Convert.ChangeType(value, typeof(ulong));
-                if(this.byteEndian == Endian.BigEndian)
+                if(byteEndian == Endian.BigEndian)
                 {
                     beginIndex += length - 1;
                 }
                 for(int i = 0; i < length; ++i)
                 {
                     byte b = (byte)(l % 256);
-                    if (this.byteEndian == Endian.BigEndian)
+                    if (byteEndian == Endian.BigEndian)
                     {
                         this[beginIndex--] = b;
                     }
@@ -112,7 +108,7 @@ namespace Bixet
             this.WriteValueByByteIndex<T>(beginIndex, value, (int)BUtil.ByteLengthOfType(typeof(T)));
         }
 
-        public void WriteValueByBitIndex<T>(int beginIndex, T value, int length)
+        public void WriteValueByBitIndex<T>(int beginIndex, T value, int length, Endian bitEndian = Endian.SmallEndian)
         {
             if (beginIndex < 0 || length <= 0 || length > maxBitsSize || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             uint maxLength = BUtil.BitLengthOfType(typeof(T));
@@ -120,14 +116,14 @@ namespace Bixet
             {
                 if (length > maxLength) throw new ArgumentOutOfRangeException("目标类型可容纳比特数小于待转换比特数");
                 ulong l = (ulong)Convert.ChangeType(value, typeof(ulong));
-                if (this.bitEndian == Endian.BigEndian)
+                if (bitEndian == Endian.BigEndian)
                 {
                     beginIndex += length - 1;
                 }
                 for (int i = 0; i < length; ++i)
                 {
                     bool b = l % 2 == 1;
-                    if (this.bitEndian == Endian.BigEndian)
+                    if (bitEndian == Endian.BigEndian)
                     {
                         this.bits[beginIndex--] = b;
                     }
@@ -147,12 +143,12 @@ namespace Bixet
             this.WriteValueByBitIndex<T>(byteIndex * 8 + bitIndex, value, length);
         }
 
-        public void WriteStringByByteIndex(int beginIndex, string s, int length, Encoding encoding = null)
+        public void WriteStringByByteIndex(int beginIndex, string s, int length, Endian byteEndian = Endian.BigEndian, Encoding encoding = null)
         {
             if (beginIndex < 0 || s == null || length <= 0 || beginIndex + length > this.BytesCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             byte[] bytes = (encoding ?? Encoding.Default).GetBytes(s);
             if(bytes.Length < length) throw new ArgumentOutOfRangeException("给定的参数异常");
-            if (this.byteEndian == Endian.BigEndian) this.SetRawBytes(beginIndex, bytes, 0, length);
+            if (byteEndian == Endian.BigEndian) this.SetRawBytes(beginIndex, bytes, 0, length);
             else
             {
                 beginIndex += length - 1;
@@ -160,13 +156,13 @@ namespace Bixet
             }   
         }
 
-        public void WriteStringByBitIndex(int beginIndex, string s, int length, Encoding encoding = null)
+        public void WriteStringByBitIndex(int beginIndex, string s, int length, Endian bitEndian = Endian.SmallEndian, Encoding encoding = null)
         {
             if (beginIndex < 0 || s == null || length <= 0 || beginIndex + length > this.BitsCount) throw new ArgumentOutOfRangeException("给定的参数异常");
             if (length % 8 != 0) throw new FormatException("待转换比特不为整字节");
             BitArray bits = new BitArray((encoding ?? Encoding.Default).GetBytes(s));
             if (bits.Count < length) throw new ArgumentOutOfRangeException("给定的参数异常");
-            if (this.bitEndian == Endian.SmallEndian) this.SetRawBits(beginIndex, bits, 0, length);
+            if (bitEndian == Endian.SmallEndian) this.SetRawBits(beginIndex, bits, 0, length);
             else
             {
                 beginIndex += length - 1;
@@ -174,9 +170,9 @@ namespace Bixet
             }
         }
 
-        public void WriteStringByBitIndex(int byteIndex, int bitIndex, string s, int length, Encoding encoding = null)
+        public void WriteStringByBitIndex(int byteIndex, int bitIndex, string s, int length, Endian bitEndian, Encoding encoding = null)
         {
-            this.WriteStringByBitIndex(byteIndex * 8 + bitIndex, s, length, encoding);
+            this.WriteStringByBitIndex(byteIndex * 8 + bitIndex, s, length, bitEndian, encoding);
         }
 
         public byte[] GetData()
