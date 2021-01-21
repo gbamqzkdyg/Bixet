@@ -15,10 +15,17 @@
 >#### [4. BReader类](#BReader类)
 >>##### [4.1 示例](#BReader示例)
 >>##### [4.2 构造函数](#BReader构造函数)
->>##### [4.3 类内常量](BReader#类内常量)
+>>##### [4.3 类内常量](#BReader类内常量)
 >>##### [4.4 属性](#BReader属性)
 >>##### [4.5 运算符重载](#BReader运算符重载)
 >>##### [4.6 方法](#BReader方法)
+>#### [5. BWriter类](#BWriter类)
+>>##### [5.1 示例](#BWriter示例)
+>>##### [5.2 构造函数](#BWriter构造函数)
+>>##### [5.3 类内常量](#BWriter类内常量)
+>>##### [5.4 属性](#BWriter属性)
+>>##### [5.5 运算符重载](#BWriter运算符重载)
+>>##### [5.6 方法](#BWriter方法)
 ---
 ## 项目描述
 ### 项目介绍
@@ -164,7 +171,7 @@ class Program
         Console.ReadKey();
 
         /* Output:
-        * Read a byte from the 0th byte: 0x01
+        Read a byte from the 0th byte: 0x01
         Read an integer from the 1th-4th bytes: 0x12345678
         Read a bit from the 0th bit of the 5th byte: False
         The above line is equivalent to read a bit from the 40th bit: False
@@ -204,9 +211,9 @@ class Program
 ### BReader构造函数
 |构造函数签名|说明|
 |-|-|
-|BReader(_byte[]_ **bytes**)|以**bytes**的全部字节作为可读取数据|
-|BReader(_byte[]_ **bytes**, _int_ **length**)|以**bytes**的前**length**个字节作为可读取数据|
-|BReader(_byte[]_ **bytes**, _int_ **offset**, _int_ **length**)|以**bytes**中从**offset**个字节开始的**length**个字节作为可读取数据|
+|public BReader(_byte[]_ **bytes**)|以**bytes**的全部字节作为可读取数据|
+|public BReader(_byte[]_ **bytes**, _int_ **length**)|以**bytes**的前**length**个字节作为可读取数据|
+|public BReader(_byte[]_ **bytes**, _int_ **offset**, _int_ **length**)|以**bytes**中从**offset**个字节开始的**length**个字节作为可读取数据|
 ###### [<p align="right">返回目录</p>](#本文内容)
 
 ### BReader类内常量
@@ -220,7 +227,7 @@ class Program
 ### BReader属性
 |属性名|说明|
 |-|-|
-|**BytesCount**|可读取数据数据字节数|
+|**BytesCount**|可读取数据字节数|
 |**BitsCount**|可读取数据比特数|
 ###### [<p align="right">返回目录</p>](#本文内容)
 
@@ -232,6 +239,138 @@ class Program
 ###### [<p align="right">返回目录</p>](#本文内容)
 
 ### BReader方法
+|方法签名|说明|
+|-|-|
+|public _byte[]_ GetRawBytes(int **beginIndex**, int **length**)|获取可读取数据从第**beginIndex**个字节处开始的**length**个字节|
+|public _System.Collections.BitArray_ GetRawBits(int **beginIndex**, int **length**)|获取可读取数据从第**beginIndex**个比特处开始的**length**个比特|
+|public _System.Collections.BitArray_ GetRawBits(int **byteIndex**, int **bitIndex**, int **length**)|获取可读取数据从第**byteIndex**个字节的第**bitIndex**个比特处开始的**length**个比特|
+|public **T** ReadValueByByteIndex&#60;**T**&#62;(int **beginIndex**, int **length**, Endian **byteEndian** = Endian.BigEndian)|将可读取数据的从第**beginIndex**个字节开始的**length**个字节按照**byteEndian**的字节序读取为**T**类型的数值</br>_注：支持读取的数值的字节数不能超过**maxBytesLength**，支持读取的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public **string** ReadStringByByteIndex(int **beginIndex**, int **length**, Endian **byteEndian** = Endian.BigEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**beginIndex**个字节开始的**length**个字节按照**byteEndian**的字节序以**encoding**编码方式读取为字符串</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public **T** ReadValueByBitIndex&#60;**T**&#62;(int **beginIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian)|将可读取数据的从第**beginIndex**个比特开始的**length**个比特按照**bitEndian**的比特序读取为**T**类型的数值</br>_注：支持读取的数值的比特数不能超过**maxBitsLength**，支持读取的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public **T** ReadValueByBitIndex&#60;**T**&#62;(int **byteIndex**, int **bitIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian)|将可读取数据的从第**byteIndex**个字节的第**bitIndex**个比特开始的**length**个比特按照**bitEndian**的比特序读取为**T**类型的数值</br>_注：支持读取的数值的最大比特数与支持类型与前一方法相同_|
+|public **string** ReadStringByBitIndex(int **beginIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**beginIndex**个比特开始的**length**个比特按照**bitEndian**的比特序以**encoding**编码方式读取为字符串</br>_注：输入的**length**参数长度必须为8的整数倍；若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public **string** ReadStringByBitIndex(int **byteIndex**, int **bitIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**byteIndex**个字节的第**bitIndex**个比特开始的**length**个比特按照**bitEndian**的比特序以**encoding**编码方式读取为字符串</br>_注：输入的**length**参数长度必须为8的整数倍；若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+## BWriter类
+<div style="font-size:70%">命名空间：Bixet</div>
+<div style="font-size:70%">程序集：Bixet.dll</div>
+
+</br>
+生成指定长度的字节数组，并向其写入数值或字符串。
+
+```C#
+public class BWriter
+```
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BWriter示例
+```C#
+using System;
+using Bixet;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Create a BWriter with length of 29 bytes");
+        BWriter bw = new BWriter(29);
+        Console.WriteLine("Write 4 bytes 0x12345678 starting at the 0th byte");
+        bw.WriteValueByByteIndex<int>(0, 0x12345678, 4);
+        Console.WriteLine("Write 32 bits 0x12345678 starting at the 32nd bit");
+        bw.WriteValueByBitIndex<int>(32, 0x12345678, 32);
+        Console.WriteLine("Write 32 bits 0x12345678 starting at the 0th bit of the 8th byte");
+        bw.WriteValueByBitIndex<long>(8, 0, 0x12345678, 32);
+        Console.WriteLine("Write 1 * 8 bits starting at the 0th bit of the 12th byte");
+        for (int i = 0; i < 8; ++i)
+        {
+            bw.WriteValueByBitIndex<bool>(12, i, i % 2 == 1, 1);
+        }
+        Console.WriteLine("Write 2 * 4 bits starting at the 104th bit");
+        for (short i = 0; i < 4; ++i)
+        {
+            bw.WriteValueByBitIndex<short>(104 + 2 * i, i, 2);
+        }
+        string s = "Bixet";
+        Console.WriteLine("Write the 5-bytes-long string starting at the 14th byte");
+        bw.WriteStringByByteIndex(14, s, 5);
+        Console.WriteLine("Write the 40-bits-long string starting at the 152th bit");
+        bw.WriteStringByBitIndex(152, s, 40);
+        Console.WriteLine("Write the 40-bits-long string starting at the 0th bit of the 24th byte");
+        bw.WriteStringByBitIndex(24, 0, s, 40);
+        byte[] bytes = bw.GetData();
+        Console.WriteLine($"Length of the generated bytes: {bytes.Length}");
+        Console.Write("The first 4 bytes of the generated bytes: ");
+        for (int i = 0; i < 4; ++i) Console.Write($"0x{Convert.ToString(bytes[i], 16)} ");
+        Console.WriteLine();
+        Console.Write("The 4th-7th bytes of the generated bytes: ");
+        for (int i = 4; i < 8; ++i) Console.Write($"0x{Convert.ToString(bytes[i], 16)} ");
+        Console.WriteLine();
+        Console.Write("The 8th-11th bytes of the generated bytes: ");
+        for (int i = 8; i < 12; ++i) Console.Write($"0x{Convert.ToString(bytes[i], 16)} ");
+        Console.WriteLine();
+        Console.WriteLine($"The 12th byte of the generated bytes: 0b{Convert.ToString(bytes[12], 2)}");
+        Console.WriteLine($"The 13th byte of the generated bytes: 0b{Convert.ToString(bytes[13], 2)}");
+        Console.WriteLine($"Decoded string from 14th-18th bytes of the generated bytes: {System.Text.Encoding.Default.GetString(bytes, 14, 5)}");
+        Console.WriteLine($"Decoded string from 19th-23th bytes of the generated bytes: {System.Text.Encoding.Default.GetString(bytes, 19, 5)}");
+        Console.WriteLine($"Decoded string from 24th-28th bytes of the generated bytes: {System.Text.Encoding.Default.GetString(bytes, 24, 5)}");
+        Console.ReadKey();
+
+        /* Output:
+        Create a BWriter with length of 29 bytes
+        Write 4 bytes 0x12345678 starting at the 0th byte
+        Write 32 bits 0x12345678 starting at the 32nd bit
+        Write 32 bits 0x12345678 starting at the 0th bit of the 8th byte
+        Write 1 * 8 bits starting at the 0th bit of the 12th byte
+        Write 2 * 4 bits starting at the 104th bit
+        Write the 5-bytes-long string starting at the 14th byte
+        Write the 40-bits-long string starting at the 152th bit
+        Write the 40-bits-long string starting at the 0th bit of the 24th byte
+        Length of the generated bytes: 29
+        The first 4 bytes of the generated bytes: 0x12 0x34 0x56 0x78
+        The 4th-7th bytes of the generated bytes: 0x78 0x56 0x34 0x12
+        The 8th-11th bytes of the generated bytes: 0x78 0x56 0x34 0x12
+        The 12th byte of the generated bytes: 0b10101010
+        The 13th byte of the generated bytes: 0b11100100
+        Decoded string from 14th-18th bytes of the generated bytes: Bixet
+        Decoded string from 19th-23th bytes of the generated bytes: Bixet
+        Decoded string from 24th-28th bytes of the generated bytes: Bixet
+        */
+    }
+}
+
+```
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BWriter构造函数
+|构造函数签名|说明|
+|-|-|
+|public BWriter(_int_ **byteLength**)|设置可写入数据大小为**byteLength**字节|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BWriter类内常量
+|常量名|说明|
+|-|-|
+|public const _string_ **version**|BWriter的版本号|
+|public const _int_ **maxBytesLength**|单次可写入的最大字节数|
+|public const _int_ **maxBitsLength**|单次可写入与的最大比特数|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BWriter属性
+|属性名|说明|
+|-|-|
+|**BytesCount**|可写入数据字节数|
+|**BitsCount**|可写入数据比特数|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BWriter运算符重载
+|运算符签名|说明|
+|-|-|
+|public _byte_ this[_int_ **i**]|写入第**i**个字节|
+|public _byte_ this[_int_ **i**, _int_ **j**]|写入第**i**个字节的第**j**个比特（输入比特值以字节表示）|
+###### [<p align="right">返回目录</p>](#本文内容)
+
+### BWriter方法
 |方法签名|说明|
 |-|-|
 |public _byte[]_ GetRawBytes(int **beginIndex**, int **length**)|获取可读取数据从第**beginIndex**个字节处开始的**length**个字节|
