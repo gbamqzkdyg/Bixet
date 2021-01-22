@@ -4,7 +4,7 @@ namespace Bixet
 {
     public class BWriter
     {
-        public const string verion = "0.4.3";
+        public const string verion = "0.4.4";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly System.Collections.BitArray bits;
@@ -15,6 +15,12 @@ namespace Bixet
         {
             if (byteLength <= 0) throw new ArgumentOutOfRangeException("给定的参数异常");
             this.bits = new System.Collections.BitArray(byteLength * 8);
+        }
+
+        public BWriter(byte[] data)
+        {
+            if(data == null) throw new ArgumentOutOfRangeException("给定的参数异常");
+            this.bits = new System.Collections.BitArray(data);
         }
 
         public byte this[int i]
@@ -146,9 +152,9 @@ namespace Bixet
             else throw new NotSupportedException("不支持转换为目标类型");
         }
 
-        public void WriteValueByBitIndex<T>(int byteIndex, int bitIndex, T value, int length)
+        public void WriteValueByBitIndex<T>(int byteIndex, int bitIndex, T value, int length, Endian bitEndian = Endian.SmallEndian)
         {
-            this.WriteValueByBitIndex<T>(byteIndex * 8 + bitIndex, value, length);
+            this.WriteValueByBitIndex<T>(byteIndex * 8 + bitIndex, value, length, bitEndian);
         }
 
         public void WriteStringByByteIndex(int beginIndex, string s, int length, Endian byteEndian = Endian.BigEndian, System.Text.Encoding encoding = null)
@@ -183,9 +189,10 @@ namespace Bixet
             this.WriteStringByBitIndex(byteIndex * 8 + bitIndex, s, length, bitEndian, encoding);
         }
 
-        public byte[] GetData()
+        public byte[] GetData(byte[] res = null)
         {
-            byte[] res = new byte[this.BytesCount];
+            if (res == null) res = new byte[this.BytesCount];
+            else if (res.Length != this.BytesCount) throw new ArgumentOutOfRangeException("给定字节数组与写入区大小不一致");
             this.bits.CopyTo(res, 0);
             return res;
         }

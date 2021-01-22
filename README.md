@@ -379,7 +379,15 @@ class Program
 |public _void_ _**SetRawBits**_(_int_ **destIndex**, _System.Collections.BitArray_ **bits**, _int_ **offset**, _int_ **length**)|向可写入数据的第**destIndex**个比特位置写入**bits**从**offset**位置开始的**length**个比特|
 |public _void_ _**SetRawBits**_(_int_ **byteIndex**, _int_ **bitIndex**, _System.Collections.BitArray_ **bits**)|向可写入数据的第**byteIndex**个字节的**bitIndex**个比特位置写入**bits**的全部比特|
 |public _void_ _**SetRawBits**_(_int_ **byteIndex**, _int_ **bitIndex**, _System.Collections.BitArray_ **bits**, _int_ **offset**, _int_ **length**)|向可写入数据的第**byteIndex**个字节的**bitIndex**个比特位置写入**bits**从**offset**位置开始的**length**个比特|
-|public _void_ _**WriteValueByByteIndex**_&#60;_T_&#62;(_int_ **beginIndex**, _T_ **value**)|向可写入数据的第**beginIndex**个字节处写入类型为*T*的数据**value**</br>_注：写入的字节数为*T*所占用的字节数。支持写入的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public _void_ _**WriteValueByByteIndex**_&#60;_T_&#62;(_int_ **beginIndex**, _T_ **value**, _Endian_ **byteEndian** = _Endian_.BigEndian)|向可写入数据的第**beginIndex**个字节处按照**byteEndian**的字节序写入类型为*T*的数据**value**</br>_注：写入的字节数为*T*所占用的字节数。支持写入的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public _void_ _**WriteValueByByteIndex**_&#60;_T_&#62;(_int_ **beginIndex**, _T_ **value**, _int_ **length**, _Endian_ **byteEndian** = _Endian_.BigEndian)|向可写入数据的第**beginIndex**个字节处按照**byteEndian**的字节序写入类型为*T*的数据**value**的前**length**个字节</br>_注：支持写入的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public _void_ _**WriteValueByBitIndex**_&#60;_T_&#62;(_int_ **beginIndex**, _T_ **value**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian)|向可写入数据的第**beginIndex**个比特处按照**bitEndian**的比特序写入类型为*T*的数据**value**的前**length**个比特</br>_注：支持写入的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public _void_ _**WriteValueByBitIndex**_&#60;_T_&#62;(_int_ **byteIndex**, _int_ **bitIndex**, _T_ **value**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian)|向可写入数据的第**byteIndex**个字节的第**bitIndex**个比特处按照**bitEndian**的比特序写入类型为*T*的数据**value**的前**length**个比特</br>_注：支持写入的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
+|public _void_ _**WriteStringByByteIndex**_(_int_ **beginIndex**, _string_ **s**, _int_ **length**, _Endian_ **byteEndian** = _Endian_.BigEndian, _System.Text.Encoding_ **encoding** = null)|向可写入数据的第**beginIndex**个字节位置按照**encoding**的编码方式写入长度为**length**字节的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|||
+|||
+|||
+
 
 
 
