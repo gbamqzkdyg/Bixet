@@ -4,7 +4,7 @@ namespace Bixet
 {
     public class BWriter
     {
-        public const string verion = "0.4.1";
+        public const string verion = "0.4.2";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly System.Collections.BitArray bits;
@@ -66,9 +66,19 @@ namespace Bixet
             for (int i = 0; i < length; ++i) this.bits[destIndex++] = bits[offset++];
         }
 
+        public void SetRawBits(int destIndex, System.Collections.BitArray bits)
+        {
+            this.SetRawBits(destIndex, bits, 0, bits.Count);
+        }
+
         public void SetRawBits(int byteIndex, int bitIndex, System.Collections.BitArray bits, int offset, int length)
         {
             this.SetRawBits(byteIndex * 8 + bitIndex, bits, offset, length);
+        }
+
+        public void SetRawBits(int byteIndex, int bitIndex, System.Collections.BitArray bits)
+        {
+            this.SetRawBits(byteIndex * 8 + bitIndex, bits, 0, bits.Count);
         }
 
         public void WriteValueByByteIndex<T>(int beginIndex, T value, int length, Endian byteEndian = Endian.BigEndian)
