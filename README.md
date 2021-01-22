@@ -387,7 +387,7 @@ class Program
 |public _void_ _**WriteStringByByteIndex**_(_int_ **beginIndex**, _string_ **s**, _int_ **length**, _Endian_ **byteEndian** = _Endian_.BigEndian, _System.Text.Encoding_ **encoding** = null)|向可写入数据的第**beginIndex**个字节位置按照**encoding**的编码方式写入编码后长度为**length**字节的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
 |public _void_ _**WriteStringByBitIndex**_(_int_ **beginIndex**, _string_ **s**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian, _System.Text.Encoding_ **encoding** = null)|向可写入数据的第**beginIndex**个比特位置按照**encoding**的编码方式写入编码后长度为**length**比特的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
 |public _void_ _**WriteStringByBitIndex**_(_int_ **byteIndex**, _int_ **bitIndex**, _string_ **s**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian, _System.Text.Encoding_ _encoding_ = null)|向可写入数据的第**byteIndex**个字节的第**bitIndex**个比特位置按照**encoding**的编码方式写入编码后长度为**length**比特的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
-|public _byte[]_ _**GetData**_(_byte[]_ **res** = null)|将可写入数据保存至**res**中</br>_注：若输入的参数**res**为**null**，将自动创建并返回新的字节数组,否则将使用输入数组_|
+|public _byte[]_ _**GetData**_(_byte[]_ **res** = null)|将可写入数据保存至**res**中</br>_注：若输入的参数**res**为**null**，将自动创建并返回新的字节数组，否则将使用输入数组_|
 ###### [<p align="right">返回目录</p>](#本文内容)
 
 ## 文档剩余部分待完成……
