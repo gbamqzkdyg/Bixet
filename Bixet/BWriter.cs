@@ -4,7 +4,7 @@ namespace Bixet
 {
     public class BWriter
     {
-        public const string verion = "0.4.2";
+        public const string verion = "0.4.3";
         public const int maxBytesSize = 8;
         public const int maxBitsSize = 64;
         private readonly System.Collections.BitArray bits;
@@ -111,9 +111,9 @@ namespace Bixet
             else throw new NotSupportedException("不支持转换为目标类型");
         }
 
-        public void WriteValueByByteIndex<T>(int beginIndex, T value)
+        public void WriteValueByByteIndex<T>(int beginIndex, T value, Endian byteEndian = Endian.BigEndian)
         {
-            this.WriteValueByByteIndex<T>(beginIndex, value, (int)BUtil.ByteLengthOfType(typeof(T)));
+            this.WriteValueByByteIndex<T>(beginIndex, value, (int)BUtil.ByteLengthOfType(typeof(T)), byteEndian);
         }
 
         public void WriteValueByBitIndex<T>(int beginIndex, T value, int length, Endian bitEndian = Endian.SmallEndian)
