@@ -54,7 +54,7 @@
 ###### [<p align="right">返回目录</p>](#本文内容)
 ***
 ### 使用方法
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在.Net项目中引用编译后的[**Bixet.dll**](releases/tag/v0.1.0)，并在自己程序中需要的位置添加对命名空间的使用。
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在.Net项目中引用编译后的[**Bixet.dll**](/releases/tag/v0.1.0)，并在自己程序中需要的位置添加对命名空间的使用。
 ###### [<p align="right">返回目录</p>](#本文内容)
 ***
 ### 数据内存布局
