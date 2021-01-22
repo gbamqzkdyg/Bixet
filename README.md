@@ -35,7 +35,7 @@
 |-|-|-|
 |__BUtil__|对字节流或比特流进行操作的工具方法集|0.2.0|
 |__BReader__|从数据指定字节位置/比特位置处依照指定字节序/比特序读取指定长度的数值或字符串|0.4.0|
-|__BWriter__|向数据指定字节位置或比特位置处依照指定字节序/比特序写入指定长度的数值或字符串|0.4.2|
+|__BWriter__|向数据指定字节位置或比特位置处依照指定字节序/比特序写入指定长度的数值或字符串|0.4.4|
 |__BTemplete__ & __BBlock__ & __BVariable__|将数据格式描述为形式化模板|开发中|
 |__BResolver__|依照数据格式模板对数据进行自动化的解析与填充|待实现|
 ###### [<p align="right">返回目录</p>](#本文内容)
@@ -345,7 +345,8 @@ class Program
 ### BWriter构造函数
 |构造函数签名|说明|
 |-|-|
-|public _**BWriter**_(_int_ **byteLength**)|设置可写入数据大小为**byteLength**字节|
+|public _**BWriter**_(_int_ **byteLength**)|创建**byteLength**字节的可写入数据|
+|public _**BWriter**_(_byte[]_ **data**)|创建字节数与**data**大小相同的可写入数据，并将**data**内容作为可写入数据的初始值|
 ###### [<p align="right">返回目录</p>](#本文内容)
 
 ### BWriter类内常量
@@ -383,21 +384,11 @@ class Program
 |public _void_ _**WriteValueByByteIndex**_&#60;_T_&#62;(_int_ **beginIndex**, _T_ **value**, _int_ **length**, _Endian_ **byteEndian** = _Endian_.BigEndian)|向可写入数据的第**beginIndex**个字节处按照**byteEndian**的字节序写入类型为*T*的数据**value**的前**length**个字节</br>_注：支持写入的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
 |public _void_ _**WriteValueByBitIndex**_&#60;_T_&#62;(_int_ **beginIndex**, _T_ **value**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian)|向可写入数据的第**beginIndex**个比特处按照**bitEndian**的比特序写入类型为*T*的数据**value**的前**length**个比特</br>_注：支持写入的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
 |public _void_ _**WriteValueByBitIndex**_&#60;_T_&#62;(_int_ **byteIndex**, _int_ **bitIndex**, _T_ **value**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian)|向可写入数据的第**byteIndex**个字节的第**bitIndex**个比特处按照**bitEndian**的比特序写入类型为*T*的数据**value**的前**length**个比特</br>_注：支持写入的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
-|public _void_ _**WriteStringByByteIndex**_(_int_ **beginIndex**, _string_ **s**, _int_ **length**, _Endian_ **byteEndian** = _Endian_.BigEndian, _System.Text.Encoding_ **encoding** = null)|向可写入数据的第**beginIndex**个字节位置按照**encoding**的编码方式写入长度为**length**字节的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
-|||
-|||
-|||
+|public _void_ _**WriteStringByByteIndex**_(_int_ **beginIndex**, _string_ **s**, _int_ **length**, _Endian_ **byteEndian** = _Endian_.BigEndian, _System.Text.Encoding_ **encoding** = null)|向可写入数据的第**beginIndex**个字节位置按照**encoding**的编码方式写入编码后长度为**length**字节的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public _void_ _**WriteStringByBitIndex**_(_int_ **beginIndex**, _string_ **s**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian, _System.Text.Encoding_ **encoding** = null)|向可写入数据的第**beginIndex**个比特位置按照**encoding**的编码方式写入编码后长度为**length**比特的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public _void_ _**WriteStringByBitIndex**_(_int_ **byteIndex**, _int_ **bitIndex**, _string_ **s**, _int_ **length**, _Endian_ **bitEndian** = _Endian_.SmallEndian, _System.Text.Encoding_ _encoding_ = null)|向可写入数据的第**byteIndex**个字节的第**bitIndex**个比特位置按照**encoding**的编码方式写入编码后长度为**length**比特的字符串**s**</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+|public _byte[]_ _**GetData**_(_byte[]_ **res** = null)|将可写入数据保存至**res**中</br>_注：若**res**为null，将自动创建并返回新的字节数组_|
+###### [<p align="right">返回目录</p>](#本文内容)
 
-
-
-
-
-|public _System.Collections.BitArray_ GetRawBits(int **beginIndex**, int **length**)|获取可读取数据从第**beginIndex**个比特处开始的**length**个比特|
-|public _System.Collections.BitArray_ GetRawBits(int **byteIndex**, int **bitIndex**, int **length**)|获取可读取数据从第**byteIndex**个字节的第**bitIndex**个比特处开始的**length**个比特|
-|public _T_ ReadValueByByteIndex&#60;_T_&#62;(int **beginIndex**, int **length**, Endian **byteEndian** = Endian.BigEndian)|将可读取数据的从第**beginIndex**个字节开始的**length**个字节按照**byteEndian**的字节序读取为_T_类型的数值</br>_注：支持读取的数值的字节数不能超过**maxBytesLength**，支持读取的类型为：**sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
-|public **string** ReadStringByByteIndex(int **beginIndex**, int **length**, Endian **byteEndian** = Endian.BigEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**beginIndex**个字节开始的**length**个字节按照**byteEndian**的字节序以**encoding**编码方式读取为字符串</br>_注：若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
-|public _T_ ReadValueByBitIndex&#60;_T_&#62;(int **beginIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian)|将可读取数据的从第**beginIndex**个比特开始的**length**个比特按照**bitEndian**的比特序读取为_T_类型的数值</br>_注：支持读取的数值的比特数不能超过**maxBitsLength**，支持读取的类型为：**bool**, **sbyte**, **byte**, **short**, **ushort**, **int**, **uint**, **long**, **ulong**_|
-|public _T_ ReadValueByBitIndex&#60;_T_&#62;(int **byteIndex**, int **bitIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian)|将可读取数据的从第**byteIndex**个字节的第**bitIndex**个比特开始的**length**个比特按照**bitEndian**的比特序读取为_T_类型的数值</br>_注：支持读取的数值的最大比特数与支持类型与前一方法相同_|
-|public **string** ReadStringByBitIndex(int **beginIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**beginIndex**个比特开始的**length**个比特按照**bitEndian**的比特序以**encoding**编码方式读取为字符串</br>_注：输入的**length**参数长度必须为8的整数倍；若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
-|public **string** ReadStringByBitIndex(int **byteIndex**, int **bitIndex**, int **length**, Endian **bitEndian** = Endian.SmallEndian, System.Text.Encoding **encoding** = null)|将可读取数据的从第**byteIndex**个字节的第**bitIndex**个比特开始的**length**个比特按照**bitEndian**的比特序以**encoding**编码方式读取为字符串</br>_注：输入的**length**参数长度必须为8的整数倍；若输入的**encoding**参数为**null**，将使用系统默认的编码方式**System.Text.Encoding.Default**对数据进行解码_|
+## 文档剩余部分待完成……
 ###### [<p align="right">返回目录</p>](#本文内容)
