@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Bixet.BixetResolver
 {
-    public class BTemplete
+    public class BTempletes
     {
         [JsonIgnore]
         public const string version = "0.0.1";
@@ -15,9 +15,9 @@ namespace Bixet.BixetResolver
         [JsonProperty]
         public IDictionary<string, BBlock> Templetes { get; set; } = new Dictionary<string, BBlock>();
 
-        public BTemplete() { }
+        public BTempletes() { }
 
-        public BTemplete(BTemplete bt)
+        public BTempletes(BTempletes bt)
         {
             this.Name = bt.Name;
             this.Templetes = bt.Templetes;
@@ -35,7 +35,7 @@ namespace Bixet.BixetResolver
 
         public override bool Equals(object obj)
         {
-            return obj is BTemplete templete &&
+            return obj is BTempletes templete &&
                    Name == templete.Name &&
                    Templetes.SequenceEqual(templete.Templetes);
         }

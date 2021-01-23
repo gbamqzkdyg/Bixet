@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BResolver\BBlock.cs" />
-    <Compile Include="BResolver\BTemplete.cs" />
+    <Compile Include="BResolver\BTempletes.cs" />
     <Compile Include="BResolver\BVariable.cs" />
     <Compile Include="BReader.cs" />
     <Compile Include="BUtil.cs" />

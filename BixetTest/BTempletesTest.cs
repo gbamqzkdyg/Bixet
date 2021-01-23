@@ -15,9 +15,9 @@ namespace BixetTest
     [TestClass]
     public class BTempletesTest
     {
-        private BTemplete CreateTemplete()
+        private BTempletes CreateTemplete()
         {
-            BTemplete bt = new BTemplete();
+            BTempletes bt = new BTempletes();
             bt.Name = "Test";
             BBlock bb = new BBlock()
             {
@@ -76,7 +76,7 @@ namespace BixetTest
             return bt;
         }
 
-        private void Serialize(BTemplete bt)
+        private void Serialize(BTempletes bt)
         {
             JsonSerializer js = new JsonSerializer();
             using (JsonTextWriter jw = new JsonTextWriter(new StreamWriter("Test.json")))
@@ -85,12 +85,12 @@ namespace BixetTest
             }
         }
 
-        private BTemplete Deserialzie()
+        private BTempletes Deserialzie()
         {
             JsonSerializer js = new JsonSerializer();
             using (JsonTextReader jr = new JsonTextReader(new StreamReader("Test.json")))
             {
-                BTemplete btt = js.Deserialize<BTemplete>(jr);
+                BTempletes btt = js.Deserialize<BTempletes>(jr);
                 return btt;
             }
         }
@@ -98,7 +98,7 @@ namespace BixetTest
         [TestMethod]
         public void TestSerialization()
         {
-            BTemplete bt = CreateTemplete();
+            BTempletes bt = CreateTemplete();
             Serialize(bt);
             Deserialzie().Should().Be(bt);
             
