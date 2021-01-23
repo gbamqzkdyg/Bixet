@@ -7,7 +7,7 @@ namespace Bixet.BixetResolver
     public class BTempletes
     {
         [JsonIgnore]
-        public const string version = "0.0.1";
+        public const string version = "0.0.2";
 
         [JsonProperty]
         public string Name { get; set; }
